@@ -1,0 +1,217 @@
+---
+import SetbackMark from './SetbackMark.astro';
+
+const navItems = [
+  { href: '/#framework', label: 'Framework' },
+  { href: '/reports', label: 'City Reports' },
+  { href: '/#method', label: 'Method' },
+  { href: '/about', label: 'About' },
+  { href: '/calculator', label: 'Pro Forma' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="masthead">
+  <div class="container masthead__inner">
+    <a href="/" class="masthead__brand" aria-label="The Setback, home">
+      <SetbackMark size={28} />
+      <span class="masthead__wordmark">The Setback</span>
+    </a>
+
+    <nav class="masthead__nav" aria-label="Primary">
+      <ul>
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={currentPath === item.href ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <button
+      id="menu-toggle"
+      class="masthead__menu-btn"
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+    >
+      <span class="visually-hidden">Toggle menu</span>
+      <span class="masthead__menu-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile" data-open="false">
+    <ul>
+      {
+        navItems.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .masthead {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(247, 245, 240, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .masthead__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    height: 72px;
+  }
+
+  .masthead__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    color: var(--color-text);
+    margin-right: auto;
+  }
+
+  .masthead__wordmark {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .masthead__nav ul {
+    display: flex;
+    gap: var(--space-6);
+  }
+
+  .masthead__nav a {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-text-soft);
+    padding-block: var(--space-2);
+    border-bottom: 1px solid transparent;
+    transition: color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .masthead__nav a:hover,
+  .masthead__nav a[aria-current='page'] {
+    color: var(--color-accent-deep);
+    border-bottom-color: var(--color-accent-deep);
+  }
+
+  .masthead__menu-btn {
+    display: none;
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: 2px;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .masthead__menu-icon,
+  .masthead__menu-icon::before,
+  .masthead__menu-icon::after {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: var(--color-text);
+    position: relative;
+    transition: transform var(--duration-fast) var(--ease-standard);
+  }
+
+  .masthead__menu-icon::before,
+  .masthead__menu-icon::after {
+    content: '';
+    position: absolute;
+  }
+
+  .masthead__menu-icon::before {
+    top: -6px;
+  }
+
+  .masthead__menu-icon::after {
+    top: 6px;
+  }
+
+  .mobile-nav {
+    display: none;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--pure-paper);
+  }
+
+  .mobile-nav ul {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-4) var(--space-4) var(--space-6);
+  }
+
+  .mobile-nav a {
+    display: block;
+    padding: var(--space-3) var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  @media (max-width: 860px) {
+    .masthead__nav {
+      display: none;
+    }
+
+    .masthead__menu-btn {
+      display: flex;
+    }
+
+    .mobile-nav[data-open='true'] {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  // Re-bound on every navigation (including the first) so it survives
+  // Astro's client-side view transitions, which swap the DOM without a
+  // full page reload.
+  document.addEventListener('astro:page-load', () => {
+    const toggle = document.getElementById('menu-toggle');
+    const nav = document.getElementById('mobile-nav');
+
+    toggle?.addEventListener('click', () => {
+      const isOpen = nav?.getAttribute('data-open') === 'true';
+      nav?.setAttribute('data-open', String(!isOpen));
+      toggle.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    nav?.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).tagName === 'A') {
+        nav.setAttribute('data-open', 'false');
+        toggle?.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+</script>

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "thesetback-dev",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["/Users/zacharyboukkouri/thesetback/.dev-server.sh"],
+      "port": 4321
+    }
+  ]
+}

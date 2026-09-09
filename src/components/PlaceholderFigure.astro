@@ -1,0 +1,57 @@
+---
+interface Props {
+  label?: string;
+  ratio?: string;
+  slim?: boolean;
+}
+
+const { label = 'Photography pending', ratio = '16/9', slim = false } = Astro.props;
+---
+
+<div
+  class:list={['placeholder-figure', { 'placeholder-figure--slim': slim }]}
+  style={slim ? undefined : `aspect-ratio: ${ratio}`}
+>
+  <svg viewBox="0 0 32 32" width={slim ? 18 : 28} height={slim ? 18 : 28} fill="none" aria-hidden="true">
+    <path
+      d="M5 25H11V19H17V13H23V7H27"
+      stroke="var(--rule)"
+      stroke-width="2"
+      stroke-linecap="square"
+    ></path>
+  </svg>
+  <span class="mono placeholder-figure__label">{label}</span>
+</div>
+
+<style>
+  .placeholder-figure {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    background: repeating-linear-gradient(
+      135deg,
+      var(--paper),
+      var(--paper) 10px,
+      var(--soft-rule) 10px,
+      var(--soft-rule) 11px
+    );
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+  }
+
+  .placeholder-figure__label {
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .placeholder-figure--slim {
+    flex-direction: row;
+    height: 72px;
+    gap: var(--space-3);
+  }
+</style>

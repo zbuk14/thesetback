@@ -1,0 +1,418 @@
+.spf {
+  background: var(--pure-paper);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: var(--space-6);
+}
+
+@media (max-width: 640px) {
+  .spf {
+    padding: var(--space-4);
+  }
+}
+
+.spf__header {
+  margin-bottom: var(--space-5);
+}
+
+.spf__title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin-top: var(--space-2);
+}
+
+.spf__subtitle {
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  margin-top: var(--space-2);
+  max-width: 52ch;
+}
+
+/* Live summary of the building itself, pinned above the sliders so a
+   reader always knows what they're looking at before they touch a dial. */
+.spf-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.spf-summary__sep {
+  color: var(--color-border);
+}
+
+@media (max-width: 640px) {
+  .spf-summary {
+    font-size: 0.82rem;
+    gap: var(--space-1) var(--space-2);
+  }
+}
+
+.spf__body {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .spf__body {
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+}
+
+.spf__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.spf-group {
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--pure-paper);
+}
+
+.spf-group[open] {
+  padding-bottom: var(--space-2);
+}
+
+.spf-group__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  color: var(--color-text);
+}
+
+.spf-group__summary::-webkit-details-marker {
+  display: none;
+}
+
+.spf-group__summary:hover {
+  color: var(--accent);
+}
+
+.spf-group__chevron {
+  width: 9px;
+  height: 9px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform var(--duration-fast) var(--ease-standard);
+  flex-shrink: 0;
+}
+
+.spf-group[open] > .spf-group__summary .spf-group__chevron {
+  transform: rotate(-135deg);
+}
+
+.spf-group__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: 0 var(--space-5) var(--space-3);
+}
+
+.spf-field {
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.spf-field:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.spf-field__label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.spf-field__label-row label {
+  font-size: 0.85rem;
+  color: var(--color-text-soft);
+}
+
+.spf-field__sublabel {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+}
+
+.spf-field__value {
+  font-size: 0.85rem;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.spf-field input[type='range'] {
+  width: 100%;
+  height: 4px;
+  appearance: none;
+  background: var(--color-border-soft);
+  border-radius: 2px;
+  outline-offset: 6px;
+  margin-bottom: var(--space-3);
+}
+
+.spf-field input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--pure-paper);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.spf-field input[type='range']::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--pure-paper);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.spf-unit-mix {
+  margin-bottom: var(--space-3);
+}
+
+.spf-unit-mix__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block: var(--space-1);
+  font-size: 0.82rem;
+}
+
+.spf-unit-mix__row dt {
+  color: var(--color-text-soft);
+}
+
+.spf-unit-mix__row dd {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+/* Status chips reuse the existing palette rather than introducing new
+   colors: VERIFIED gets the strongest signal (deep accent), ESTIMATE
+   reuses the amber already used for pending/in-progress states, and
+   ASSUMPTION sits at neutral muted. */
+.spf-chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.3em 0.55em;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  text-decoration: none;
+}
+
+a.spf-chip:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.spf-chip--verified {
+  color: var(--deep-accent);
+}
+
+.spf-chip--verified-range {
+  color: var(--accent);
+  border-style: dashed;
+}
+
+.spf-chip--derived {
+  color: var(--soft-ink);
+}
+
+.spf-chip--estimate {
+  color: #9a6b2c;
+}
+
+.spf-chip--assumption {
+  color: var(--muted);
+}
+
+.spf__outputs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.spf-result {
+  background: var(--paper);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: var(--space-5);
+  position: sticky;
+  top: 140px;
+}
+
+@media (max-width: 860px) {
+  .spf-result {
+    position: sticky;
+    bottom: 0;
+    top: auto;
+    z-index: 5;
+    box-shadow: 0 -4px 16px rgba(27, 36, 49, 0.08);
+  }
+}
+
+.spf-result__figure {
+  font-size: 3rem;
+  line-height: 1;
+  margin-top: var(--space-2);
+  color: var(--muted);
+}
+
+.spf-result__figure[data-pass='true'] {
+  color: var(--deep-accent);
+}
+
+.spf-result__compare {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.spf-result__compare-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  color: var(--color-text-soft);
+  padding-block: var(--space-1);
+}
+
+.spf-result__compare-row .mono {
+  color: var(--color-text);
+}
+
+.spf-result__compare-row .mono[data-pass='true'] {
+  color: var(--deep-accent);
+}
+
+.spf-result__compare-row .mono[data-pass='false'] {
+  color: var(--muted);
+}
+
+.spf-result__bar {
+  margin-top: var(--space-5);
+}
+
+.spf-result__bar-track {
+  position: relative;
+  height: 8px;
+  background: var(--soft-rule);
+  border-radius: 4px;
+  overflow: visible;
+}
+
+.spf-result__bar-fill {
+  height: 100%;
+  background: var(--muted);
+  border-radius: 4px;
+  transition: width var(--duration-standard) var(--ease-standard);
+}
+
+.spf-result__bar-fill[data-pass='true'] {
+  background: var(--accent);
+}
+
+.spf-result__bar-threshold {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: 16px;
+  background: var(--ink);
+}
+
+.spf-result__bar-threshold::after {
+  content: 'required';
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.spf-breakdown__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--color-border-soft);
+  font-size: 0.85rem;
+}
+
+.spf-breakdown__row:last-child {
+  border-bottom: none;
+}
+
+.spf-breakdown__row dt {
+  color: var(--color-muted);
+}
+
+.spf-breakdown__row dd {
+  margin: 0;
+  color: var(--color-text);
+}
+
+/* Dev-only, gated behind ?reconcile — not part of the reader-facing
+   design system, so it's deliberately plainer than everything else here. */
+.spf-reconcile {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px dashed var(--color-border);
+}
+
+.spf-reconcile__title {
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: var(--space-3);
+}
+
+.spf-reconcile__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--space-2) var(--space-4);
+}
+
+.spf-reconcile__grid dt {
+  font-size: 0.68rem;
+  color: var(--color-muted);
+}
+
+.spf-reconcile__grid dd {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--color-text);
+}

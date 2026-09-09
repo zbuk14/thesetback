@@ -1,0 +1,136 @@
+---
+interface ScorecardData {
+  permitsPer1000?: number;
+  medianApprovalMonths?: number;
+  vacancyRatePct?: number;
+  rentToIncomePct?: number;
+  shareSingleFamilyZonedPct?: number;
+}
+
+interface Props {
+  scorecard?: ScorecardData;
+}
+
+const { scorecard = {} } = Astro.props;
+
+const rows = [
+  {
+    id: 'M1',
+    label: 'Permits per 1,000 residents',
+    value: scorecard.permitsPer1000,
+    suffix: '',
+  },
+  {
+    id: 'M2',
+    label: 'Median permit approval time',
+    value: scorecard.medianApprovalMonths,
+    suffix: ' mo',
+  },
+  {
+    id: 'M3',
+    label: 'Rental vacancy rate',
+    value: scorecard.vacancyRatePct,
+    suffix: '%',
+  },
+  {
+    id: 'M4',
+    label: 'Median rent-to-income ratio',
+    value: scorecard.rentToIncomePct,
+    suffix: '%',
+  },
+  {
+    id: 'M5',
+    label: 'Share of land zoned single-family',
+    value: scorecard.shareSingleFamilyZonedPct,
+    suffix: '%',
+  },
+];
+---
+
+<table class="scorecard">
+  <caption class="visually-hidden">Supply scorecard: five-metric method</caption>
+  <thead>
+    <tr>
+      <th scope="col" class="mono">Metric</th>
+      <th scope="col" class="mono">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      rows.map((row) => (
+        <tr>
+          <th scope="row">
+            <span class="mono scorecard__id">{row.id}</span>
+            {row.label}
+          </th>
+          <td class="mono scorecard__value">
+            {row.value === undefined ? (
+              <span class="scorecard__pending">pending</span>
+            ) : (
+              `${row.value}${row.suffix}`
+            )}
+          </td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  .scorecard {
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--pure-paper);
+  }
+
+  .scorecard thead th {
+    text-align: left;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding: var(--space-3) var(--space-5);
+    background: var(--paper);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .scorecard thead th:last-child {
+    text-align: right;
+  }
+
+  .scorecard tbody tr {
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  .scorecard tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .scorecard th[scope='row'] {
+    text-align: left;
+    font-weight: 400;
+    padding: var(--space-4) var(--space-5);
+    font-size: 0.92rem;
+    color: var(--color-text);
+  }
+
+  .scorecard__id {
+    color: var(--color-accent-deep);
+    font-size: 0.7rem;
+    margin-right: var(--space-3);
+  }
+
+  .scorecard__value {
+    text-align: right;
+    padding: var(--space-4) var(--space-5);
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+
+  .scorecard__pending {
+    color: var(--color-muted);
+    font-style: italic;
+    font-family: var(--font-body);
+  }
+</style>

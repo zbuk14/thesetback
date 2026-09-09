@@ -1,0 +1,16 @@
+---
+interface Props {
+  status: 'published' | 'draft-sourced' | 'in-progress' | 'upcoming';
+}
+
+const { status } = Astro.props;
+
+const labels: Record<Props['status'], string> = {
+  published: 'Published',
+  'draft-sourced': 'Draft · Sourced',
+  'in-progress': 'In Progress',
+  upcoming: 'Upcoming',
+};
+---
+
+<span class={`status-tag status-tag--${status}`}>{labels[status]}</span>

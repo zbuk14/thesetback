@@ -1,0 +1,158 @@
+---
+import SetbackMark from './SetbackMark.astro';
+
+const SUBSTACK_URL = ''; // TODO: add Substack URL
+const CONTACT_EMAIL = ''; // TODO: add contact email
+const X_URL = 'https://x.com/thesetbackpub';
+const INSTAGRAM_URL = 'https://www.instagram.com/thesetbackpub/';
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <a href="/" class="footer__mark" aria-label="The Setback, home">
+        <SetbackMark size={26} color="var(--paper)" />
+        <span>The Setback</span>
+      </a>
+      <p class="footer__mission">
+        Independent research on the binding constraints behind America's
+        housing shortage, city by city, quantified.
+      </p>
+    </div>
+
+    <div class="footer__columns">
+      <div class="footer__col">
+        <p class="label footer__col-title">Read</p>
+        <ul>
+          <li><a href="/reports">City Reports</a></li>
+          <li><a href="/#framework">The Framework</a></li>
+          <li><a href="/calculator">Pro Forma Calculator</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <p class="label footer__col-title">Follow</p>
+        <ul>
+          <li>
+            {
+              SUBSTACK_URL ? (
+                <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">
+                  Substack
+                </a>
+              ) : (
+                <span class="footer__placeholder">Substack: coming soon</span>
+              )
+            }
+          </li>
+          <li>
+            {
+              CONTACT_EMAIL ? (
+                <a href={`mailto:${CONTACT_EMAIL}`}>Contact</a>
+              ) : (
+                <span class="footer__placeholder">Contact: coming soon</span>
+              )
+            }
+          </li>
+          <li>
+            <a href={X_URL} target="_blank" rel="noopener noreferrer">
+              X
+            </a>
+          </li>
+          <li>
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+              Instagram
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer__colophon">
+    <p class="mono">The Setback · est. 2026 · Bethesda, MD</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--ink);
+    color: var(--paper);
+    padding-top: var(--space-9);
+  }
+
+  .footer__inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--space-8);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid rgba(247, 245, 240, 0.15);
+  }
+
+  .footer__mark {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    color: var(--paper);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    margin-bottom: var(--space-4);
+  }
+
+  .footer__mission {
+    color: rgba(247, 245, 240, 0.7);
+    max-width: 32ch;
+    font-size: 0.95rem;
+  }
+
+  .footer__columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+
+  .footer__col-title {
+    color: rgba(247, 245, 240, 0.5);
+    margin-bottom: var(--space-4);
+  }
+
+  .footer__col ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .footer__col a,
+  .footer__placeholder {
+    text-decoration: none;
+    color: rgba(247, 245, 240, 0.85);
+    font-size: 0.92rem;
+  }
+
+  .footer__col a:hover {
+    color: var(--paper);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .footer__placeholder {
+    color: rgba(247, 245, 240, 0.4);
+  }
+
+  .footer__colophon {
+    padding-block: var(--space-5);
+  }
+
+  .footer__colophon p {
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: rgba(247, 245, 240, 0.45);
+  }
+
+  @media (max-width: 640px) {
+    .footer__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,135 @@
+---
+import SectionNumeral from './SectionNumeral.astro';
+
+const metrics = [
+  {
+    id: 'M1',
+    name: 'Permits issued per 1,000 residents',
+    note: 'Annual pace of new housing authorization relative to population.',
+  },
+  {
+    id: 'M2',
+    name: 'Median permit approval time',
+    note: 'Months from application to issuance, entitlement to permit.',
+  },
+  {
+    id: 'M3',
+    name: 'Rental vacancy rate',
+    note: 'Slack, or lack of it, in the existing rental stock.',
+  },
+  {
+    id: 'M4',
+    name: 'Median rent-to-income ratio',
+    note: 'Cost burden on the households already living there.',
+  },
+  {
+    id: 'M5',
+    name: 'Share of land zoned single-family',
+    note: 'How much of the map legally excludes multifamily by default.',
+  },
+];
+---
+
+<section id="method" class="band-dark section method-band" data-reveal>
+  <SectionNumeral number="04" variant="paper" />
+  <div class="container">
+    <p class="eyebrow eyebrow--on-dark">The Method</p>
+    <h2 class="method-band__heading">How each city is measured</h2>
+    <p class="method-band__lead">
+      Every report in this publication is scored against the same five
+      metrics before any narrative is written. The framework changes by
+      city; the ruler doesn't.
+    </p>
+
+    <div class="method-band__grid">
+      {
+        metrics.map((m) => (
+          <div class="method-cell">
+            <p class="mono method-cell__id">{m.id}</p>
+            <p class="method-cell__name">{m.name}</p>
+            <p class="method-cell__note">{m.note}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="mono method-band__source">
+      Source: U.S. Census Building Permits Survey · HUD · FRED · municipal
+      planning departments
+    </p>
+  </div>
+</section>
+
+<style>
+  .method-band {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .method-band .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .method-band__heading {
+    color: var(--paper);
+    margin-top: var(--space-3);
+    max-width: 18ch;
+  }
+
+  .method-band__lead {
+    color: rgba(247, 245, 240, 0.72);
+    max-width: var(--width-measure);
+    margin-top: var(--space-4);
+    font-size: 1.05rem;
+  }
+
+  .method-band__grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-5);
+    margin-top: var(--space-8);
+    padding-top: var(--space-7);
+    border-top: 1px solid rgba(247, 245, 240, 0.15);
+  }
+
+  @media (max-width: 960px) {
+    .method-band__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .method-band__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .method-cell__id {
+    color: var(--paper);
+    opacity: 0.5;
+    font-size: 0.72rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .method-cell__name {
+    color: var(--paper);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    line-height: 1.3;
+    margin-bottom: var(--space-2);
+  }
+
+  .method-cell__note {
+    color: rgba(247, 245, 240, 0.6);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .method-band__source {
+    margin-top: var(--space-8);
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+    color: rgba(247, 245, 240, 0.4);
+  }
+</style>

@@ -1,0 +1,196 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SetbackDivider from '../components/SetbackDivider.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="The Setback is an independent research publication diagnosing the binding constraint behind America's housing shortage, city by city."
+>
+  <section class="section about-hero">
+    <div class="container">
+      <p class="eyebrow">About</p>
+      <h1 class="about-hero__headline">Housing is simple until you look closely.</h1>
+      <p class="standfirst">
+        The Setback started from a frustration with how the housing debate
+        gets flattened. Build more housing, everyone says. True, and yet the
+        reason it isn't happening is different in every city.
+      </p>
+    </div>
+  </section>
+
+  <SetbackDivider />
+
+  <section class="section about-body" data-reveal>
+    <div class="container about-body__grid">
+      <div class="about-body__main measure">
+        <p>
+          In Los Angeles, a project can wait the better part of a year for
+          approval, and much of the city is zoned so only single-family
+          homes are legal. That is a <strong>regulatory</strong> problem. In
+          Detroit, there is no shortage of land or buildings, but investment
+          does not flow to the places that need it, because the numbers do
+          not work. That is a <strong>capital</strong> problem. In San
+          Francisco, the land itself runs out. That is a
+          <strong>structural</strong> problem. Same shortage, three
+          different binding constraints.
+        </p>
+        <p>
+          This publication takes one city at a time and asks a single
+          question: what is actually stopping supply here? Each report runs
+          the same measurements, walks through the constraint that governs
+          that market, and ends with a development model that puts the
+          diagnosis in dollars.
+        </p>
+
+        <h2 class="about-body__subhead">Who writes it</h2>
+        <p>
+          Zachary Boukkouri is a freshman at Colby College, from
+          Bethesda, Maryland.
+        </p>
+        <p>
+          He spent three years as a junior project manager at a family
+          construction and development firm, where he filed the permits,
+          tracked the budgets, and watched projects stall for reasons that
+          had nothing to do with whether anyone wanted the housing built.
+          That vantage point (closer to the job site than to the
+          commentary) is what this publication tries to keep.
+        </p>
+        <p>
+          The Setback is where construction, policy, and finance meet.
+          Housing is the rare problem that none of the three explains on its
+          own.
+        </p>
+      </div>
+
+      <aside class="about-sidebar">
+        <div class="sidebar-card">
+          <p class="label sidebar-card__title">The Framework</p>
+          <ul class="sidebar-card__list">
+            <li><strong>Regulatory</strong>: the rules won't allow it</li>
+            <li><strong>Capital</strong>: the money won't come</li>
+            <li><strong>Structural</strong>: the place won't fit it</li>
+          </ul>
+          <a href="/#framework" class="mono sidebar-card__link">Read the framework →</a>
+        </div>
+
+        <div class="sidebar-card">
+          <p class="label sidebar-card__title">Elsewhere</p>
+          <ul class="sidebar-card__list sidebar-card__list--plain">
+            <li><a href="/reports">City Reports</a></li>
+            <li><a href="/calculator">Pro Forma Calculator</a></li>
+            <li>
+              <a href="https://x.com/thesetbackpub" target="_blank" rel="noopener noreferrer">
+                X
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.instagram.com/thesetbackpub/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Instagram
+              </a>
+            </li>
+            <li><span class="sidebar-card__placeholder">Substack: coming soon</span></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-hero__headline {
+    margin-top: var(--space-3);
+    max-width: 16ch;
+  }
+
+  .about-hero .standfirst {
+    margin-top: var(--space-5);
+  }
+
+  .about-body__grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: var(--space-9);
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .about-body__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .about-body__main p {
+    margin-bottom: var(--space-5);
+    color: var(--color-text-soft);
+    font-size: 1.02rem;
+  }
+
+  .about-body__main strong {
+    color: var(--color-text);
+  }
+
+  .about-body__subhead {
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+
+  .about-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    position: sticky;
+    top: 100px;
+  }
+
+  .sidebar-card {
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: var(--space-5);
+    background: var(--pure-paper);
+  }
+
+  .sidebar-card__title {
+    margin-bottom: var(--space-4);
+  }
+
+  .sidebar-card__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    font-size: 0.9rem;
+    color: var(--color-text-soft);
+  }
+
+  .sidebar-card__list--plain a {
+    text-decoration: none;
+    color: var(--color-text);
+  }
+
+  .sidebar-card__list--plain a:hover {
+    color: var(--color-accent-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .sidebar-card__placeholder {
+    color: var(--color-muted);
+  }
+
+  .sidebar-card__link {
+    display: inline-block;
+    margin-top: var(--space-4);
+    font-size: 0.75rem;
+    color: var(--color-accent-deep);
+    text-decoration: none;
+  }
+
+  .sidebar-card__link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

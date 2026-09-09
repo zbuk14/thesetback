@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ReportRow from '../../components/ReportRow.astro';
+
+const reports = (await getCollection('reports')).sort((a, b) =>
+  a.data.reportNumber.localeCompare(b.data.reportNumber)
+);
+---
+
+<BaseLayout
+  title="City Reports"
+  description="Every city report in The Setback, diagnosing which constraint (regulatory, capital, or structural) binds housing supply."
+>
+  <section class="section reports-page">
+    <div class="container">
+      <p class="eyebrow">City Reports</p>
+      <h1 class="reports-page__heading">The diagnosis, city by city</h1>
+      <p class="standfirst">
+        Each report runs the same method: identify the binding constraint,
+        score it against five supply metrics, then quantify it with a
+        40-unit development model.
+      </p>
+
+      <div class="reports-page__list" data-reveal>
+        {reports.map((entry) => <ReportRow entry={entry} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .reports-page__heading {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .reports-page .standfirst {
+    margin-bottom: var(--space-8);
+  }
+
+  .reports-page__list {
+    border-top: 1px solid var(--color-border-soft);
+  }
+</style>

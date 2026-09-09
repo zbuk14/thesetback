@@ -1,0 +1,42 @@
+---
+interface Props {
+  number: string;
+  variant?: 'ink' | 'paper';
+}
+
+const { number, variant = 'ink' } = Astro.props;
+---
+
+<span class="section-numeral" data-variant={variant} aria-hidden="true">{number}</span>
+
+<style>
+  .section-numeral {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(6rem, 18vw, 13rem);
+    line-height: 0.8;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    opacity: 0.05;
+    pointer-events: none;
+    user-select: none;
+    transform: translate(8%, -18%);
+    white-space: nowrap;
+  }
+
+  .section-numeral[data-variant='paper'] {
+    color: var(--paper);
+    opacity: 0.06;
+  }
+
+  @media (max-width: 640px) {
+    .section-numeral {
+      font-size: 6rem;
+      transform: translate(10%, -25%);
+    }
+  }
+</style>

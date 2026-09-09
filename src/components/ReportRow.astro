@@ -1,0 +1,112 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import StatusTag from './StatusTag.astro';
+
+interface Props {
+  entry: CollectionEntry<'reports'>;
+}
+
+const { entry } = Astro.props;
+const { reportNumber, city, dek, status, constraintTypes } = entry.data;
+
+const constraintLabel: Record<string, string> = {
+  regulatory: 'Regulatory',
+  capital: 'Capital',
+  structural: 'Structural',
+};
+---
+
+<a href={`/reports/${entry.slug}`} class="report-row">
+  <span class="report-row__number mono">{reportNumber}</span>
+  <span class="report-row__main">
+    <span class="report-row__city">{city}</span>
+    <span class="report-row__dek">{dek}</span>
+  </span>
+  <span class="report-row__constraint mono">
+    {constraintTypes.map((c: string) => constraintLabel[c]).join(' + ')}
+  </span>
+  <StatusTag status={status} />
+</a>
+
+<style>
+  .report-row {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr auto auto;
+    align-items: center;
+    gap: var(--space-5);
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--color-border-soft);
+    text-decoration: none;
+    color: var(--color-text);
+    transition: background var(--duration-fast) var(--ease-standard),
+      transform var(--duration-fast) var(--ease-standard);
+  }
+
+  .report-row:hover,
+  .report-row:focus-visible {
+    background: rgba(58, 107, 126, 0.05);
+    transform: translateX(2px);
+  }
+
+  .report-row__number {
+    color: var(--color-muted);
+    font-size: 0.8rem;
+  }
+
+  .report-row__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .report-row__city {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+  }
+
+  .report-row__dek {
+    color: var(--color-muted);
+    font-size: 0.88rem;
+  }
+
+  .report-row__constraint {
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-accent-deep);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 720px) {
+    .report-row {
+      grid-template-columns: 2.5rem 1fr;
+      grid-template-areas:
+        'num city'
+        '. dek'
+        '. tags';
+      row-gap: var(--space-2);
+    }
+
+    .report-row__number {
+      grid-area: num;
+    }
+
+    .report-row__main {
+      grid-area: city;
+    }
+
+    .report-row__constraint {
+      grid-area: tags;
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      justify-self: start;
+    }
+
+    .report-row :global(.status-tag) {
+      grid-area: tags;
+      justify-self: end;
+    }
+  }
+</style>

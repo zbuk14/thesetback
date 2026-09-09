@@ -1,0 +1,29 @@
+---
+interface Props {
+  size?: number;
+  color?: string;
+  class?: string;
+}
+
+const { size = 32, color = 'currentColor', class: className = '' } = Astro.props;
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox="0 0 32 32"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="The Setback logo mark"
+>
+  <rect x="0.5" y="0.5" width="31" height="31" stroke={color} stroke-opacity="0.35" />
+  <path
+    d="M5 25H11V19H17V13H23V7H27"
+    stroke={color}
+    stroke-width="2"
+    stroke-linecap="square"
+    stroke-linejoin="miter"
+  ></path>
+</svg>

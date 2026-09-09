@@ -1,0 +1,425 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Scorecard from '../../components/Scorecard.astro';
+import SourcedScorecard from '../../components/SourcedScorecard.astro';
+import StatusTag from '../../components/StatusTag.astro';
+import PlaceholderFigure from '../../components/PlaceholderFigure.astro';
+import SetbackDivider from '../../components/SetbackDivider.astro';
+import SourcesTable from '../../components/SourcesTable.astro';
+
+export async function getStaticPaths() {
+  const reports = await getCollection('reports');
+  return reports.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'reports'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const {
+  city,
+  dek,
+  reportNumber,
+  status,
+  constraintTypes,
+  scorecard,
+  heroImage,
+  heroImageAlt,
+  publishDate,
+  dataVintage,
+  proFormaPreset,
+  proFormaData,
+  author,
+} = entry.data;
+
+// Reports with a sourced data file (currently only R-01) render their
+// scorecard from that file's `scorecard` array — arbitrary row count,
+// per-row source link — instead of the fixed 5-metric shape used by the
+// still-unsourced stub reports. Vite needs a static glob (not a template-
+// literal dynamic import) to resolve these at build time.
+const sourcedDataFiles = import.meta.glob('../../data/*.json', { eager: true }) as Record<
+  string,
+  { default: { scorecard: Array<{ id: string; metric: string; value: string; vintage: string; source_url: string }> } }
+>;
+const sourcedScorecard = proFormaData
+  ? sourcedDataFiles[`../../data/${proFormaData}.json`]?.default.scorecard ?? null
+  : null;
+
+const constraintLabel: Record<string, string> = {
+  regulatory: 'Regulatory',
+  capital: 'Capital',
+  structural: 'Structural',
+};
+
+// YAML frontmatter dates parse as UTC midnight; format in UTC too, or a
+// negative-offset local timezone rolls the displayed date back a day.
+const dateFormatted = publishDate
+  ? new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      timeZone: 'UTC',
+    }).format(publishDate)
+  : null;
+---
+
+<BaseLayout title={`${reportNumber} · ${city}`} description={dek}>
+  <article class="report">
+    <header class="report-hero-type">
+      <div class="report-meta-row">
+        <div class="container report-meta-row__inner">
+          <div class="report-meta-row__item">
+            <span class="mono">{reportNumber}</span>
+            <StatusTag status={status} />
+          </div>
+          <div class="report-meta-row__item report-meta-row__item--right">
+            <span class="mono">
+              {constraintTypes.map((c) => constraintLabel[c]).join(' + ')}
+            </span>
+            <span class="mono report-meta-row__sub">
+              Vintage {dataVintage ?? 'pending'} · Updated {dateFormatted ?? 'pending'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-hero-clip">
+        <div class="container">
+          <h1 class="report-hero-type__name">{city}</h1>
+        </div>
+      </div>
+
+      <div class="container report-header-dek">
+        <p class="standfirst">{dek}</p>
+        {author && <p class="mono report-header-byline">By {author}</p>}
+      </div>
+    </header>
+
+    <div class="container report-hero">
+      {
+        heroImage ? (
+          <Image src={heroImage} alt={heroImageAlt ?? `${city}`} widths={[600, 1200, 1800]} sizes="100vw" />
+        ) : (
+          <PlaceholderFigure label={`${city}: photography pending`} slim />
+        )
+      }
+    </div>
+
+    <div class="container report-layout">
+      <section class="report-scorecard" aria-labelledby="scorecard-heading" data-reveal>
+        <p class="eyebrow">Supply Scorecard</p>
+        <h2 id="scorecard-heading">How {city} measures up</h2>
+        <div class="report-scorecard__table">
+          {sourcedScorecard ? (
+            <SourcedScorecard scorecard={sourcedScorecard} />
+          ) : (
+            <Scorecard scorecard={scorecard} />
+          )}
+        </div>
+        {!sourcedScorecard && (
+          <p class="mono report-scorecard__note">
+            Figures are provisional pending source verification against the
+            Census Building Permits Survey, HUD, FRED, and municipal planning
+            data.
+          </p>
+        )}
+      </section>
+
+      <SetbackDivider />
+
+      <div class="report-prose measure">
+        <Content />
+      </div>
+
+      {proFormaPreset && !proFormaData && <SourcesTable cityKey={proFormaPreset} />}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  /* Everything in the header — metadata row, oversized name, dek — aligns
+     to the same .container edges. The name is the only thing allowed to
+     escape that grid, and only to the right, clipped at the viewport. */
+
+  .report-meta-row {
+    position: sticky;
+    top: 88px;
+    z-index: 30;
+    background: var(--paper);
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  .report-meta-row__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding-block: var(--space-3);
+  }
+
+  .report-meta-row__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .report-meta-row__item--right {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3em;
+    text-align: right;
+  }
+
+  .report-meta-row__sub {
+    color: var(--color-muted);
+    letter-spacing: 0.03em;
+  }
+
+  @media (max-width: 640px) {
+    .report-meta-row__item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+
+    .report-meta-row__item--right {
+      align-items: flex-end;
+    }
+  }
+
+  .report-hero-clip {
+    overflow-x: hidden;
+    padding-block: var(--space-6) var(--space-2);
+  }
+
+  .report-hero-type__name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(3.5rem, 3rem + 6vw, 9.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 720px) {
+    .report-hero-clip {
+      padding-block: var(--space-6) var(--space-2);
+    }
+
+    .report-hero-type__name {
+      font-size: clamp(2.75rem, 16vw, 5rem);
+    }
+  }
+
+  .report-header-dek {
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  .report-header-dek .standfirst {
+    margin: 0;
+  }
+
+  .report-header-byline {
+    margin-top: var(--space-3);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--color-muted);
+  }
+
+  .report-hero {
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-8);
+  }
+
+  .report-hero :global(img) {
+    width: 100%;
+    height: auto;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .report-layout {
+    padding-bottom: var(--space-9);
+  }
+
+  .report-scorecard {
+    max-width: var(--width-measure);
+    margin-inline: auto;
+    margin-bottom: var(--space-8);
+  }
+
+  .report-scorecard h2 {
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-5);
+  }
+
+  .report-scorecard__note {
+    margin-top: var(--space-4);
+    font-size: 0.7rem;
+    color: var(--color-muted);
+  }
+
+  .report-prose {
+    margin-inline: auto;
+    margin-top: var(--space-8);
+    counter-reset: section;
+  }
+
+  .report-prose :global(h2) {
+    counter-increment: section;
+    font-size: 1.6rem;
+    margin-top: var(--space-9);
+    margin-bottom: var(--space-5);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+    position: relative;
+  }
+
+  .report-prose :global(h2:first-of-type) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .report-prose :global(h2::before) {
+    content: '0' counter(section) ' · ';
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent-deep);
+    font-weight: 500;
+    margin-right: var(--space-2);
+  }
+
+  .report-prose :global(p) {
+    color: var(--color-text-soft);
+    margin-bottom: var(--space-5);
+    font-size: 1.02rem;
+  }
+
+  .report-prose :global(h2:first-of-type + p) {
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--color-text);
+  }
+
+  .report-prose :global(ul),
+  .report-prose :global(ol) {
+    margin-bottom: var(--space-5);
+    padding-left: 1.4em;
+  }
+
+  .report-prose :global(ul) {
+    list-style: disc;
+  }
+
+  .report-prose :global(ol) {
+    list-style: decimal;
+  }
+
+  .report-prose :global(li) {
+    color: var(--color-text-soft);
+    margin-bottom: var(--space-2);
+  }
+
+  .report-prose :global(a) {
+    color: var(--color-text);
+    text-decoration-color: var(--color-border);
+    text-underline-offset: 2px;
+  }
+
+  .report-prose :global(a:hover) {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
+
+  .report-prose :global(strong) {
+    color: var(--color-text);
+  }
+
+  .report-prose :global(em) {
+    font-family: var(--font-display);
+    font-style: italic;
+  }
+
+  .report-prose :global(h3) {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    margin-top: var(--space-7);
+    margin-bottom: var(--space-4);
+    color: var(--color-text);
+  }
+
+  .report-prose :global(h4) {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+    color: var(--color-muted);
+  }
+
+  /* GFM tables get no styling from remark by default. Scroll horizontally
+     rather than letting cells wrap into a cramped, borderless mess on
+     narrow viewports or data-dense tables (Input manifest, sensitivity). */
+  .report-prose :global(table) {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin-bottom: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    border-collapse: collapse;
+    background: var(--pure-paper);
+    font-size: 0.88rem;
+  }
+
+  .report-prose :global(thead) {
+    background: var(--paper);
+  }
+
+  .report-prose :global(th) {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+
+  .report-prose :global(td) {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border-soft);
+    color: var(--color-text-soft);
+    vertical-align: top;
+    min-width: 9em;
+  }
+
+  .report-prose :global(tr:last-child td) {
+    border-bottom: none;
+  }
+
+  .report-prose :global(.pf-calc) {
+    margin-top: var(--space-6);
+  }
+</style>

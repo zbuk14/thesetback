@@ -1,0 +1,348 @@
+---
+import {
+  CITY_PRESETS,
+  CHART_GRIDLINES_PCT,
+  CONSTRAINT_COLOR_VARS,
+  calculateProForma,
+  formatPct,
+  getChartFraction,
+  getRequiredReturn,
+} from '../lib/proforma';
+import dcData from '../data/dc-proforma.json';
+
+// viewBox geometry
+const W = 480;
+const H = 300;
+const marginTop = 30;
+const marginBottom = 54;
+const marginLeft = 34;
+const marginRight = 10;
+const plotX0 = marginLeft;
+const plotX1 = W - marginRight;
+const plotY0 = marginTop;
+const plotY1 = H - marginBottom;
+const plotWidth = plotX1 - plotX0;
+const plotHeight = plotY1 - plotY0;
+
+function yFor(value: number) {
+  return plotY1 - getChartFraction(value) * plotHeight;
+}
+
+// D.C.'s figure comes straight from dc-proforma.json — the one sourced
+// model in the codebase — not from the generic placeholder preset system.
+// Only D.C. and the benchmark render here: a chart with one honest bar
+// beats six bars where five are unsourced guesses. The other five city
+// reports will get their own bar once they have a real model behind them.
+const slotWidth = plotWidth / 3;
+const barWidth = Math.min(90, slotWidth * 0.5);
+const dcCenter = plotX0 + 0.5 * slotWidth;
+const gapCenter = plotX0 + 1.5 * slotWidth;
+const benchCenter = plotX0 + 2.5 * slotWidth;
+
+const dcRoc = dcData.outputs.return_on_cost * 100;
+const dcRequired = dcData.outputs.required_return * 100;
+const dcGapBps = dcData.outputs.gap_bps;
+const dcColor = CONSTRAINT_COLOR_VARS.regulatory;
+const dcTop = yFor(dcRoc);
+const dcReqY = yFor(dcRequired);
+
+const benchmarkPreset = CITY_PRESETS.find((p) => p.isBenchmark)!;
+const benchmarkRequired = getRequiredReturn(benchmarkPreset.inputs.exitCap);
+const benchmarkResult = calculateProForma(benchmarkPreset.inputs, benchmarkRequired);
+const benchTop = yFor(benchmarkResult.returnOnCost);
+const benchReqY = yFor(benchmarkRequired);
+---
+
+<div class="chart-preview" data-reveal>
+  <p class="mono chart-preview__label">One measure of the constraint</p>
+  <p class="chart-preview__title">Return on cost</p>
+
+  <div class="chart-preview__legend">
+    <span class="chart-preview__legend-item">
+      <span class="chart-preview__legend-swatch" style={`background: ${dcColor}`} />
+      <span class="mono">Regulatory constraint</span>
+    </span>
+    <span class="chart-preview__legend-item">
+      <span class="chart-preview__legend-swatch chart-preview__legend-swatch--outline" />
+      <span class="mono">Frictionless baseline</span>
+    </span>
+  </div>
+
+  <svg
+    class="chart-preview__svg"
+    viewBox={`0 0 ${W} ${H}`}
+    role="img"
+    aria-label={`Washington D.C. return on cost ${formatPct(dcRoc, 2)} against a required return of ${formatPct(
+      dcRequired,
+      2
+    )}, a shortfall of ${dcGapBps} basis points. Benchmark return on cost ${formatPct(
+      benchmarkResult.returnOnCost,
+      1
+    )} against a required return of ${formatPct(benchmarkRequired, 2)}, which it clears.`}
+  >
+    <defs>
+      <pattern id="preview-hatch" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+        <line x1="0" y1="0" x2="0" y2="6" stroke={dcColor} stroke-width="2" opacity="0.4" />
+      </pattern>
+    </defs>
+
+    {
+      CHART_GRIDLINES_PCT.map((g) => {
+        const y = yFor(g);
+        const isBaseline = g === CHART_GRIDLINES_PCT[0];
+        return (
+          <g>
+            <line
+              x1={plotX0}
+              x2={plotX1}
+              y1={y}
+              y2={y}
+              class={isBaseline ? 'chart-preview__baseline' : 'chart-preview__gridline'}
+            />
+            <text x={plotX0 - 8} y={y} class="chart-preview__axis-label" text-anchor="end">
+              {g}%
+            </text>
+          </g>
+        );
+      })
+    }
+
+    <line x1={gapCenter} x2={gapCenter} y1={plotY0} y2={plotY1} class="chart-preview__separator" />
+
+    <rect
+      x={dcCenter - barWidth / 2}
+      y={dcTop}
+      width={barWidth}
+      height={Math.max(0, plotY1 - dcTop)}
+      rx="2"
+      style={`fill: ${dcColor}`}
+    />
+    <rect
+      x={dcCenter - barWidth / 2}
+      y={dcReqY}
+      width={barWidth}
+      height={Math.max(0, dcTop - dcReqY)}
+      fill="url(#preview-hatch)"
+    />
+    <line x1={dcCenter - barWidth / 2} x2={dcCenter + barWidth / 2} y1={dcReqY} y2={dcReqY} class="chart-preview__cap" />
+    <text x={dcCenter} y={dcTop - 8} class="chart-preview__value-label" text-anchor="middle">
+      {formatPct(dcRoc, 2)}
+    </text>
+    <text x={dcCenter} y={dcReqY - 8} class="chart-preview__req-label" text-anchor="middle">
+      Required {formatPct(dcRequired, 2)}
+    </text>
+    <text x={dcCenter} y={plotY1 + 20} class="chart-preview__bar-label" text-anchor="middle">
+      Washington, D.C.
+    </text>
+    <text x={dcCenter} y={plotY1 + 34} class="chart-preview__gap-label" text-anchor="middle">
+      −{dcGapBps} bps
+    </text>
+
+    <rect
+      x={benchCenter - barWidth / 2}
+      y={benchTop}
+      width={barWidth}
+      height={Math.max(0, plotY1 - benchTop)}
+      rx="2"
+      class="chart-preview__bar-outline"
+    />
+    <line
+      x1={benchCenter - barWidth / 2}
+      x2={benchCenter + barWidth / 2}
+      y1={benchReqY}
+      y2={benchReqY}
+      class="chart-preview__cap chart-preview__cap--muted"
+    />
+    <text x={benchCenter} y={benchTop - 8} class="chart-preview__value-label chart-preview__value-label--muted" text-anchor="middle">
+      {formatPct(benchmarkResult.returnOnCost, 1)}
+    </text>
+    <text x={benchCenter} y={plotY1 + 20} class="chart-preview__bar-label chart-preview__bar-label--muted" text-anchor="middle">
+      Baseline
+    </text>
+  </svg>
+
+  <div class="chart-preview__explainer">
+    <p class="mono chart-preview__explainer-label">How to Read This</p>
+    <p class="chart-preview__explainer-text">
+      Return on cost is what a finished building earns each year, divided by what it cost to
+      build. The number alone means little. What matters is how it compares to the rate that
+      finished buildings of the same type actually trade at. That difference is the value a
+      developer creates by building rather than buying. Ground-up apartments generally need at
+      least 1.25 percentage points of cushion to attract investors. So each city's threshold here
+      is the rate its finished buildings trade at, plus 1.25 points. The hatched area is how far
+      short each city falls. Below the line, the money goes somewhere else. The baseline on the
+      right is the same building with none of the frictions this publication studies: cheap land,
+      fast permits, cheap debt.
+    </p>
+  </div>
+
+  <a href="/calculator" class="chart-preview__cta mono">Try the calculator →</a>
+</div>
+
+<style>
+  .chart-preview {
+    background: var(--pure-paper);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: var(--space-6);
+    width: 100%;
+  }
+
+  .chart-preview__label {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .chart-preview__title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    margin-top: var(--space-1);
+    margin-bottom: var(--space-5);
+  }
+
+  .chart-preview__legend {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: var(--space-2);
+    column-gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+
+  .chart-preview__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .chart-preview__legend-swatch {
+    width: 9px;
+    height: 9px;
+    border-radius: 1px;
+    display: inline-block;
+  }
+
+  .chart-preview__legend-swatch--outline {
+    background: transparent;
+    border: 1.5px solid var(--color-muted);
+  }
+
+  .chart-preview__svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .chart-preview__gridline {
+    stroke: var(--soft-rule);
+    stroke-width: 1;
+  }
+
+  .chart-preview__baseline {
+    stroke: var(--rule);
+    stroke-width: 1.5;
+  }
+
+  .chart-preview__axis-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    fill: var(--color-muted);
+    dominant-baseline: middle;
+  }
+
+  .chart-preview__separator {
+    stroke: var(--color-border);
+    stroke-width: 1;
+  }
+
+  .chart-preview__bar-outline {
+    fill: none;
+    stroke: var(--color-muted);
+    stroke-width: 1.5;
+  }
+
+  .chart-preview__cap {
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
+
+  .chart-preview__cap--muted {
+    stroke: var(--color-muted);
+    stroke-width: 1.5;
+  }
+
+  .chart-preview__value-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    fill: var(--ink);
+  }
+
+  .chart-preview__value-label--muted {
+    fill: var(--color-muted);
+    font-weight: 400;
+  }
+
+  .chart-preview__req-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    fill: var(--ink);
+  }
+
+  .chart-preview__bar-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    fill: var(--color-text);
+  }
+
+  .chart-preview__bar-label--muted {
+    fill: var(--color-muted);
+  }
+
+  .chart-preview__gap-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    fill: var(--color-muted);
+  }
+
+  .chart-preview__gap-label--muted {
+    font-style: italic;
+  }
+
+  .chart-preview__explainer {
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border-soft);
+  }
+
+  .chart-preview__explainer-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    color: var(--color-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .chart-preview__explainer-text {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--color-text-soft);
+  }
+
+  .chart-preview__cta {
+    display: inline-block;
+    margin-top: var(--space-4);
+    font-size: 0.75rem;
+    color: var(--color-accent-deep);
+    text-decoration: none;
+  }
+
+  .chart-preview__cta:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

@@ -1,0 +1,117 @@
+---
+interface ScorecardRow {
+  id: string;
+  metric: string;
+  value: string;
+  vintage: string;
+  source_url: string;
+}
+
+interface Props {
+  scorecard: ScorecardRow[];
+}
+
+const { scorecard } = Astro.props;
+---
+
+<table class="scorecard">
+  <caption class="visually-hidden">Supply scorecard: sourced metrics</caption>
+  <thead>
+    <tr>
+      <th scope="col" class="mono">Metric</th>
+      <th scope="col" class="mono">Value</th>
+      <th scope="col" class="mono">Source</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      scorecard.map((row) => (
+        <tr>
+          <th scope="row">
+            <span class="mono scorecard__id">{row.id}</span>
+            {row.metric}
+          </th>
+          <td class="mono scorecard__value">{row.value}</td>
+          <td class="scorecard__source">
+            <a class="mono" href={row.source_url} target="_blank" rel="noopener noreferrer">
+              {row.vintage}
+            </a>
+          </td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  .scorecard {
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--pure-paper);
+    border-collapse: collapse;
+  }
+
+  .scorecard thead th {
+    text-align: left;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding: var(--space-3) var(--space-5);
+    background: var(--paper);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .scorecard thead th:not(:first-child) {
+    text-align: right;
+  }
+
+  .scorecard tbody tr {
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  .scorecard tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .scorecard th[scope='row'] {
+    text-align: left;
+    font-weight: 400;
+    padding: var(--space-4) var(--space-5);
+    font-size: 0.92rem;
+    color: var(--color-text);
+  }
+
+  .scorecard__id {
+    color: var(--color-accent-deep);
+    font-size: 0.7rem;
+    margin-right: var(--space-3);
+  }
+
+  .scorecard__value {
+    text-align: right;
+    padding: var(--space-4) var(--space-5);
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+
+  .scorecard__source {
+    text-align: right;
+    padding: var(--space-4) var(--space-5);
+    white-space: nowrap;
+  }
+
+  .scorecard__source a {
+    font-size: 0.75rem;
+    color: var(--color-muted);
+    text-decoration: none;
+  }
+
+  .scorecard__source a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+</style>

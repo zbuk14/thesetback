@@ -1,0 +1,50 @@
+---
+interface Props {
+  tag: string;
+  heading: string;
+  body: string;
+  cities: string[];
+}
+
+const { tag, heading, body, cities } = Astro.props;
+---
+
+<article class="framework-card">
+  <p class="eyebrow framework-card__tag">{tag}</p>
+  <h3 class="framework-card__heading">{heading}</h3>
+  <p class="framework-card__body">{body}</p>
+  <p class="mono framework-card__cities">{cities.join(' · ')}</p>
+</article>
+
+<style>
+  .framework-card {
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--pure-paper);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    height: 100%;
+  }
+
+  .framework-card__heading {
+    font-size: 1.35rem;
+  }
+
+  .framework-card__body {
+    color: var(--color-text-soft);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .framework-card__cities {
+    margin-top: auto;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border-soft);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+</style>

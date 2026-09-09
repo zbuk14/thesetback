@@ -1,0 +1,216 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SetbackDivider from '../components/SetbackDivider.astro';
+import FrameworkCard from '../components/FrameworkCard.astro';
+import ReportRow from '../components/ReportRow.astro';
+import ChartPreviewCard from '../components/ChartPreviewCard.astro';
+import MethodBand from '../components/MethodBand.astro';
+import SectionNumeral from '../components/SectionNumeral.astro';
+
+const reports = (await getCollection('reports')).sort((a, b) =>
+  a.data.reportNumber.localeCompare(b.data.reportNumber)
+);
+
+const frameworks = [
+  {
+    tag: 'Regulatory',
+    heading: 'The rules won’t allow it',
+    body: 'Zoning that forecloses multifamily by default, discretionary review with no fixed clock, and political resistance to density that outlasts any single hearing.',
+    cities: ['Los Angeles', 'San Francisco'],
+  },
+  {
+    tag: 'Capital',
+    heading: 'The money won’t come',
+    body: 'Construction cost exceeds what a lender or equity partner will underwrite against achievable rents. The entitlement isn’t the problem, the return is.',
+    cities: ['Detroit', 'Post-Industrial Metros'],
+  },
+  {
+    tag: 'Structural',
+    heading: 'The place won’t fit it',
+    body: 'Geography, lot geometry, and an existing built form set a hard ceiling on incremental supply that no amount of policy reform alone resolves.',
+    cities: ['San Francisco', 'Coastal Metros'],
+  },
+];
+---
+
+<BaseLayout
+  title="The Setback"
+  description="An independent research publication on American housing supply. Every city has a different binding constraint: regulatory, capital, or structural. This is where they're diagnosed and quantified."
+>
+  <section class="hero section">
+    <div class="container hero__inner">
+      <p class="eyebrow">A Housing Research Publication</p>
+
+      <h1 class="hero__headline">
+        American cities can't build housing. No two of them for the same
+        reason.
+      </h1>
+
+      <p class="standfirst">
+        Housing scarcity looks like one problem and behaves like several.
+        This publication examines American cities one at a time to
+        identify the constraint actually binding supply in each
+        (regulatory, capital, or structural), combining policy analysis
+        with a development model that puts each diagnosis in dollars.
+      </p>
+
+      <div class="hero__actions">
+        <a href="/reports" class="btn btn-primary">Read the city reports</a>
+        <a href="/#framework" class="btn btn-ghost">The framework</a>
+      </div>
+    </div>
+  </section>
+
+  <SetbackDivider />
+
+  <section id="framework" class="section framework" data-reveal>
+    <SectionNumeral number="01" />
+    <div class="container">
+      <p class="eyebrow">The Framework</p>
+      <h2 class="framework__heading">Three ways a city can fail to build</h2>
+      <div class="framework__grid">
+        {frameworks.map((f) => <FrameworkCard {...f} />)}
+      </div>
+    </div>
+  </section>
+
+  <section id="model" class="section chart-section" data-reveal>
+    <SectionNumeral number="02" />
+    <div class="container">
+      <p class="eyebrow">The Development Model</p>
+      <h2 class="chart-section__heading">One measure among several</h2>
+      <p class="standfirst chart-section__lead">
+        Every city report runs the same five-metric scorecard and narrative
+        diagnosis before it reaches a number. This chart is one way of
+        putting a single piece of that diagnosis in dollars, not the whole
+        of it.
+      </p>
+      <div class="chart-section__chart">
+        <ChartPreviewCard />
+      </div>
+    </div>
+  </section>
+
+  <section id="reports" class="section reports-index" data-reveal>
+    <SectionNumeral number="03" />
+    <div class="container">
+      <div class="reports-index__header">
+        <div>
+          <p class="eyebrow">City Reports</p>
+          <h2>The diagnosis, city by city</h2>
+        </div>
+        <a href="/reports" class="mono reports-index__view-all">View all →</a>
+      </div>
+
+      <div class="reports-index__list">
+        {reports.map((entry) => <ReportRow entry={entry} />)}
+      </div>
+    </div>
+  </section>
+
+  <MethodBand />
+</BaseLayout>
+
+<style>
+  /* Flush left, no exceptions — headline, standfirst, and buttons all
+     share the same left edge as the rest of the page. No indent, no
+     stepping; the setback motif lives only in the logo and the divider.
+     Text-led hero: full container width, no side visual competing with it. */
+  .hero__inner {
+    padding-top: var(--space-5);
+  }
+
+  .hero__headline {
+    margin-top: var(--space-4);
+    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem);
+    line-height: 1.06;
+  }
+
+  .hero__inner .standfirst {
+    margin-top: var(--space-6);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-7);
+  }
+
+  .framework,
+  .chart-section,
+  .reports-index {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .framework .container,
+  .chart-section .container,
+  .reports-index .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .chart-section__heading {
+    margin-top: var(--space-3);
+    max-width: 24ch;
+  }
+
+  .chart-section__lead {
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-7);
+  }
+
+  .chart-section__chart {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .framework__heading {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-7);
+    max-width: 24ch;
+  }
+
+  .framework__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+  }
+
+  @media (max-width: 860px) {
+    .framework__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .reports-index__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--space-6);
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .reports-index__header h2 {
+    margin-top: var(--space-3);
+  }
+
+  .reports-index__view-all {
+    font-size: 0.78rem;
+    color: var(--color-accent-deep);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .reports-index__view-all:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .reports-index__list {
+    border-top: 1px solid var(--color-border-soft);
+  }
+</style>

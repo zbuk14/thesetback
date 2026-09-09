@@ -1,0 +1,339 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SetbackDivider from '../components/SetbackDivider.astro';
+---
+
+<BaseLayout
+  title="Method"
+  description="The technical backing behind every report in The Setback: sensitivity tests, input manifests, source lists, and modeling approach, kept out of the article itself."
+>
+  <section class="section method-hero">
+    <div class="container">
+      <p class="eyebrow">Method</p>
+      <h1 class="method-hero__headline">How these numbers are built.</h1>
+      <p class="standfirst">
+        Every report runs on a pro forma model with a stated approach, a full
+        list of inputs, and a sensitivity test against its own conclusion.
+        None of that belongs in the middle of an argument, so it lives here
+        instead.
+      </p>
+    </div>
+  </section>
+
+  <SetbackDivider />
+
+  <section class="section method-body" data-reveal>
+    <div class="container method-prose measure">
+      <h2 id="r-01">R-01 · Washington, D.C.</h2>
+      <p>
+        The technical backing for the Washington, D.C. report: does the
+        conclusion hold up under different assumptions, where every input
+        comes from, and exactly how the model works.
+      </p>
+
+      <h3>Does this hold up?</h3>
+      <p>
+        A model that only produces one answer is not a model. Each material
+        input moved to the ends of its defensible range, one at a time:
+      </p>
+
+      <table>
+        <thead>
+          <tr><th>Assumption</th><th>Low</th><th>Base</th><th>High</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Hard cost, $/SF</td><td>4.38% (at $220)</td><td>3.72%</td><td>2.95% (at $370)</td></tr>
+          <tr><td>Achievable rent</td><td>2.98% (at $2,113)</td><td>3.72%</td><td>4.70% (at $2,900)</td></tr>
+          <tr><td>Land</td><td>4.00% (at $1.5M)</td><td>3.72%</td><td>3.42% (at $3.5M)</td></tr>
+          <tr><td>Operating expenses per unit</td><td>4.14% (at $7,500)</td><td>3.72%</td><td>3.40% (at $11,000)</td></tr>
+          <tr><td>Construction loan rate</td><td>3.76% (at 6.5%)</td><td>3.72%</td><td>3.67% (at 9.5%)</td></tr>
+          <tr><td>Exit cap rate</td><td>3.66% (at 4.75%)</td><td>3.72%</td><td>3.78% (at 6.00%)</td></tr>
+          <tr><td>Soft cost %</td><td>3.88% (at 15%)</td><td>3.72%</td><td>3.57% (at 25%)</td></tr>
+          <tr><td>Vacancy</td><td>3.84% (at 5.0%)</td><td>3.72%</td><td>3.59% (at 9.0%)</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        No single input, moved to its most favorable defensible end, clears
+        6.50 percent. The two that move the answer most, hard cost per
+        square foot and achievable rent, are both cost-structural. Neither
+        is a zoning variable.
+      </p>
+      <p>
+        To confirm the model is not rigged to fail: set every input to its
+        most favorable end simultaneously and apply the full reform package.
+        Return on cost is 8.45 percent, comfortably clearing. The model can
+        produce a feasible building. Washington's current conditions cannot.
+      </p>
+
+      <h4>What would actually close it</h4>
+      <p>
+        At the regulatory ceiling, holding everything else at base: rent
+        would need to reach $3,240 a month, a 32 percent increase, in a
+        market where rents fell 3.8 percent last year.
+      </p>
+      <p>
+        Residual land value is negative $1.5 million. A merchant builder
+        cannot pay for the dirt. They would need to be paid to take it.
+      </p>
+      <p>
+        That second number is the whole report in one line. At the current
+        cost of construction and the current level of rents, a
+        well-located D.C. site zoned for forty apartments is a liability
+        rather than an asset to anyone whose business is building
+        apartments.
+      </p>
+
+      <h3>Input manifest</h3>
+      <p>
+        Status flags: VERIFIED: published figure from a named source.
+        VERIFIED_RANGE: base case sits inside a published range. DERIVED:
+        computed from verified inputs. ESTIMATE: professional judgment, the
+        priority validation queue.
+      </p>
+
+      <table>
+        <thead>
+          <tr><th>#</th><th>Input</th><th>Value</th><th>Status</th><th>Source</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Units</td><td>40</td><td>ASSUMPTION</td><td>Model design</td></tr>
+          <tr><td>2</td><td>Unit mix and sizes</td><td>484 / 697 / 996 SF</td><td>VERIFIED</td><td>RentCafe / Yardi Matrix, Aug 2026</td></tr>
+          <tr><td>3</td><td>Efficiency ratio</td><td>80%</td><td>ESTIMATE</td><td>Reflects two-stair mandate</td></tr>
+          <tr><td>4</td><td>Land cost</td><td>$2,400,000</td><td>ESTIMATE</td><td>~$205/land SF at FAR 3.0; 26% below D.C. asking average of $278/SF</td></tr>
+          <tr><td>5</td><td>Hard cost, shell and core</td><td>$275/GSF</td><td>VERIFIED_RANGE</td><td>RLB QCR Q1 2026, D.C. multifamily $220&ndash;370/SF</td></tr>
+          <tr><td>6</td><td>Structured parking cost</td><td>$35,000/space</td><td>VERIFIED</td><td>D.C. Policy Center, below-grade</td></tr>
+          <tr><td>7</td><td>Parking ratio</td><td>0.50/unit</td><td>ESTIMATE</td><td>Minimums bind on 96% of D.C. residential lots</td></tr>
+          <tr><td>8</td><td>Soft costs</td><td>20% of land + hard</td><td>ESTIMATE</td><td>Priority validation</td></tr>
+          <tr><td>9</td><td>Entitlement timeline</td><td>14 months</td><td>ESTIMATE</td><td>Priority validation</td></tr>
+          <tr><td>10</td><td>Construction timeline</td><td>18 months</td><td>ESTIMATE</td><td>Priority validation</td></tr>
+          <tr><td>11</td><td>Construction loan rate</td><td>8.00%</td><td>VERIFIED_RANGE</td><td>SOFR ~4.8% + 275&ndash;400 bps; multifamily construction average 7.6%</td></tr>
+          <tr><td>12</td><td>Achievable rent</td><td>$2,450/mo</td><td>VERIFIED</td><td>RentCafe / Yardi Matrix, citywide average $2,446</td></tr>
+          <tr><td>13</td><td>Inclusionary zoning set-aside</td><td>10% of units</td><td>VERIFIED</td><td>D.C. Policy Center, program requires 8&ndash;12.5% of residential floor area</td></tr>
+          <tr><td>14</td><td>IZ rent, 60% MFI</td><td>$1,550/mo</td><td>ESTIMATE</td><td>Refine against DHCD 2026 IZ schedule</td></tr>
+          <tr><td>15</td><td>Vacancy and credit loss</td><td>7.0%</td><td>DERIVED</td><td>Yardi Matrix occupancy 94.2%; Northmarq vacancy 5.2%</td></tr>
+          <tr><td>16</td><td>Other income</td><td>3% of GPR</td><td>ESTIMATE</td><td>Industry convention</td></tr>
+          <tr><td>17</td><td>Operating expenses</td><td>$9,500/unit/yr</td><td>ESTIMATE</td><td>Priority validation</td></tr>
+          <tr><td>18</td><td>Property tax rate</td><td>0.85%</td><td>VERIFIED</td><td>D.C. OTR, Class 1A, $0.85 per $100</td></tr>
+          <tr><td>19</td><td>Exit cap rate</td><td>5.25%</td><td>VERIFIED_RANGE</td><td>CBRE H1 2026, D.C. Class A stabilized infill 4.75&ndash;5.5%</td></tr>
+          <tr><td>20</td><td>Required developer spread</td><td>125 bps</td><td>ESTIMATE</td><td>Standard merchant-build screen</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        Priority validation queue: soft cost percentage (#8), entitlement
+        timeline (#9), construction timeline (#10), operating expenses
+        (#17). Land (#4) is now triangulated against published asking
+        prices and one transaction, and the conclusion is independent of
+        it.
+      </p>
+
+      <h3>Full source list</h3>
+
+      <h4>Permits and production</h4>
+      <ul>
+        <li><a href="https://fred.stlouisfed.org/series/DCBPPRIV" target="_blank" rel="noopener noreferrer">U.S. Census Bureau, Building Permits Survey: New Private Housing Units Authorized, D.C. (DCBPPRIV) via FRED</a></li>
+        <li>U.S. Census Bureau: Resident Population in the District of Columbia (DCDIST5POP) via FRED</li>
+        <li>D.C. Office of Planning: 2025 Census population estimates</li>
+        <li>D.C. Policy Center: D.C. population growth slowed in 2025</li>
+        <li>Bisnow: D.C. construction starts at a 15-year low</li>
+        <li>Housing&amp;: Housing Indicator Tool 6.0, Capital Region</li>
+      </ul>
+
+      <h4>Policy and regulation</h4>
+      <ul>
+        <li><a href="https://www.dcpolicycenter.org/publications/breaking-the-scarcity-subsidy-cycle-a-new-housing-vision-for-the-district-of-columbia/" target="_blank" rel="noopener noreferrer">D.C. Policy Center: Breaking the scarcity-subsidy cycle (primary source)</a></li>
+        <li>D.C. Policy Center: Reducing regulatory barriers to housing production</li>
+        <li><a href="https://www.dcpolicycenter.org/publications/inclusionary-zoning-dhcd-2026/" target="_blank" rel="noopener noreferrer">D.C. Policy Center: Reforming Inclusionary Zoning</a></li>
+        <li>D.C. Office of Zoning: Planned Unit Developments</li>
+        <li><a href="https://dob.dc.gov/publication/plan-review-and-permit-timelines-service-level-agreements" target="_blank" rel="noopener noreferrer">D.C. Department of Buildings: Plan Review and Permit Timelines (SLAs)</a></li>
+        <li>Mayor's Office: 36,000 homes by 2025 milestone</li>
+        <li>D.C. Office of Planning: Housing Framework for Equity and Growth</li>
+        <li><a href="https://otr.cfo.dc.gov/page/real-property-tax-rates" target="_blank" rel="noopener noreferrer">D.C. Office of Tax and Revenue: Real Property Tax Rates</a></li>
+        <li>D.C. Fiscal Policy Institute: Where D.C. gets its money, residential property tax</li>
+      </ul>
+
+      <h4>Costs, rents, capital markets, land</h4>
+      <ul>
+        <li><a href="https://www.rlb.com/wp-content/uploads/sites/4/2026/03/Q1-2026-QCR.pdf" target="_blank" rel="noopener noreferrer">Rider Levett Bucknall: Quarterly Construction Cost Report Q1 2026 (PDF)</a></li>
+        <li>Rider Levett Bucknall: East region commentary Q1 2026</li>
+        <li><a href="https://www.rentcafe.com/average-rent-market-trends/us/dc/washington/" target="_blank" rel="noopener noreferrer">RentCafe / Yardi Matrix: Average rent in Washington, D.C.</a></li>
+        <li><a href="https://www.yardimatrix.com/blog/washington-dc-multifamily-market-report/" target="_blank" rel="noopener noreferrer">Yardi Matrix: Washington D.C. multifamily market report</a></li>
+        <li>Northmarq: Washington D.C. multifamily market overview</li>
+        <li>Marcus &amp; Millichap: D.C. 2026 multifamily investment forecast</li>
+        <li><a href="https://www.cbre.com/insights/reports/us-cap-rate-survey-h1-2026" target="_blank" rel="noopener noreferrer">CBRE: U.S. Cap Rate Survey H1 2026</a></li>
+        <li>Bisnow: Vacant sites flooding the market as D.C. construction stalls</li>
+        <li>Bisnow: JBG Smith sells site of long-stalled NoMa development for $11M</li>
+        <li><a href="https://www.loopnet.com/search/land/washington-dc/for-sale/" target="_blank" rel="noopener noreferrer">LoopNet: D.C. land parcels for sale</a></li>
+      </ul>
+
+      <h3>Limitations</h3>
+      <p>
+        The model is a merchant-build screen. A long-hold owner, a
+        mission-driven developer with patient capital, or a project
+        stacking low-income housing tax credits faces different
+        arithmetic. The 6.50 percent hurdle is the right test for the
+        marginal private dollar, not for every dollar.
+      </p>
+      <p>
+        Site-specific costs (remediation, historic fa&ccedil;ade retention,
+        protected trees, public-space exactions) are excluded. Each is
+        real in Washington and each pushes the answer further negative.
+        The model is optimistic, not pessimistic.
+      </p>
+      <p>
+        Four inputs remain professional estimates rather than published
+        figures. They are flagged in the manifest and will be updated
+        against primary records.
+      </p>
+      <p>
+        The 2026 permit uptick is unresolved. If the second half of 2026
+        sustains the May&ndash;June pace, part of this analysis will need
+        revisiting. I will publish an update when the full year is
+        available rather than quietly leave the earlier framing in place.
+      </p>
+
+      <h3>Approach</h3>
+      <p>
+        The model asks one question. Build the building, rent it, run it
+        for a year, and what does it earn as a share of what it cost?
+      </p>
+      <p>
+        That is the return on cost. It gets compared to what an investor
+        needs: the rate a finished building of this type trades at, plus
+        1.25 percentage points to compensate for the risk of building it.
+        In Washington that comes to 6.50 percent.
+      </p>
+      <p>
+        This is a single-year snapshot, not a full cash flow projection.
+        It is the screen a developer runs before a deal gets a second
+        meeting, and it is the right test for whether something gets
+        built.
+      </p>
+      <p>Three details are easy to get wrong, so they are stated plainly:</p>
+      <ul>
+        <li><strong>Construction interest is charged on half the loan.</strong> A construction loan pays out in stages as work progresses, so the average balance over the build is roughly half the total. Charging interest on the full amount for the full term overstates the cost by about double.</li>
+        <li><strong>Entitlement interest is charged on the full land price.</strong> Land is bought in one go, so the whole balance accrues interest from day one.</li>
+        <li><strong>Vacancy is deducted.</strong> No building is 100 percent leased and paying. Models that skip this step overstate income and therefore overstate value.</li>
+      </ul>
+      <p>
+        Property tax is solved by iteration. The tax depends on the
+        assessed value, the assessed value depends on the income, and the
+        income depends on the tax. The model loops until the three agree.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .method-hero__headline {
+    margin-top: var(--space-3);
+    max-width: 20ch;
+  }
+
+  .method-body {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-9);
+  }
+
+  .method-prose {
+    margin-inline: auto;
+  }
+
+  .method-prose h2 {
+    font-size: 1.8rem;
+    margin-bottom: var(--space-5);
+  }
+
+  .method-prose h3 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .method-prose h4 {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+    color: var(--color-muted);
+  }
+
+  .method-prose p {
+    color: var(--color-text-soft);
+    margin-bottom: var(--space-5);
+    font-size: 1rem;
+  }
+
+  .method-prose ul {
+    margin-bottom: var(--space-5);
+    padding-left: 1.4em;
+    list-style: disc;
+  }
+
+  .method-prose li {
+    color: var(--color-text-soft);
+    margin-bottom: var(--space-2);
+  }
+
+  .method-prose strong {
+    color: var(--color-text);
+  }
+
+  .method-prose a {
+    color: var(--color-text);
+    text-decoration-color: var(--color-border);
+    text-underline-offset: 2px;
+  }
+
+  .method-prose a:hover {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
+
+  .method-prose table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin-bottom: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    border-collapse: collapse;
+    background: var(--pure-paper);
+    font-size: 0.88rem;
+  }
+
+  .method-prose thead {
+    background: var(--paper);
+  }
+
+  .method-prose th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+
+  .method-prose td {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border-soft);
+    color: var(--color-text-soft);
+    vertical-align: top;
+    min-width: 9em;
+  }
+
+  .method-prose tr:last-child td {
+    border-bottom: none;
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+import dcData from '../data/dc-proforma.json';
+
+const series = dcData.permit_series.annual_units as Record<string, number>;
+const years = Object.keys(series).sort();
+const values = years.map((y) => series[y]);
+const maxValue = Math.max(...values);
+
+const HIGHLIGHT_YEARS = new Set(['2022', '2025']);
+
+// viewBox geometry
+const W = 900;
+const H = 280;
+const MARGIN_TOP = 40;
+const MARGIN_BOTTOM = 40;
+const MARGIN_LEFT = 20;
+const MARGIN_RIGHT = 20;
+const PLOT_X0 = MARGIN_LEFT;
+const PLOT_X1 = W - MARGIN_RIGHT;
+const PLOT_Y0 = MARGIN_TOP;
+const PLOT_Y1 = H - MARGIN_BOTTOM;
+const PLOT_WIDTH = PLOT_X1 - PLOT_X0;
+const PLOT_HEIGHT = PLOT_Y1 - PLOT_Y0;
+
+const CEILING = maxValue * 1.15;
+
+function yFor(value: number) {
+  return PLOT_Y1 - (value / CEILING) * PLOT_HEIGHT;
+}
+
+const slotWidth = PLOT_WIDTH / years.length;
+const barWidth = Math.min(72, slotWidth * 0.6);
+
+const bars = years.map((year, i) => {
+  const value = series[year];
+  const slotCenter = PLOT_X0 + i * slotWidth + slotWidth / 2;
+  return {
+    year,
+    value,
+    x: slotCenter - barWidth / 2,
+    centerX: slotCenter,
+    top: yFor(value),
+    highlighted: HIGHLIGHT_YEARS.has(year),
+  };
+});
+---
+
+<div class="permit-chart" data-reveal>
+  <svg
+    class="permit-chart__svg"
+    viewBox={`0 0 ${W} ${H}`}
+    role="img"
+    aria-label={`Homes permitted in the District, by year: ${bars
+      .map((b) => `${b.year}, ${b.value.toLocaleString()}`)
+      .join('; ')}.`}
+  >
+    <line x1={PLOT_X0} x2={PLOT_X1} y1={PLOT_Y1} y2={PLOT_Y1} class="permit-chart__baseline" />
+
+    {
+      bars.map((bar) => (
+        <g>
+          <rect
+            x={bar.x}
+            y={bar.top}
+            width={barWidth}
+            height={Math.max(0, PLOT_Y1 - bar.top)}
+            class={bar.highlighted ? 'permit-chart__bar permit-chart__bar--accent' : 'permit-chart__bar'}
+          />
+          <text x={bar.centerX} y={bar.top - 10} class="permit-chart__value-label" text-anchor="middle">
+            {bar.value.toLocaleString()}
+          </text>
+          <text x={bar.centerX} y={PLOT_Y1 + 22} class="permit-chart__year-label" text-anchor="middle">
+            {bar.year}
+          </text>
+        </g>
+      ))
+    }
+  </svg>
+
+  <p class="mono permit-chart__caption">
+    Homes permitted in the District, by year. Source: U.S. Census Bureau Building Permits Survey.
+  </p>
+</div>
+
+<style>
+  .permit-chart {
+    background: var(--pure-paper);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: var(--space-6);
+  }
+
+  @media (max-width: 640px) {
+    .permit-chart {
+      padding: var(--space-4);
+    }
+  }
+
+  .permit-chart__svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    display: block;
+  }
+
+  .permit-chart__baseline {
+    stroke: var(--rule);
+    stroke-width: 1.5;
+  }
+
+  .permit-chart__bar {
+    fill: var(--color-muted);
+    opacity: 0.5;
+  }
+
+  .permit-chart__bar--accent {
+    fill: var(--accent);
+    opacity: 1;
+  }
+
+  .permit-chart__value-label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    fill: var(--color-text);
+  }
+
+  .permit-chart__year-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    fill: var(--color-muted);
+  }
+
+  .permit-chart__caption {
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border-soft);
+    font-size: 0.72rem;
+    color: var(--color-muted);
+  }
+</style>

@@ -1,0 +1,165 @@
+---
+import { getCityData, REQUIRED_SPREAD, type SourcedValue } from '../data/cityData';
+import { formatCurrency, formatPct } from '../lib/proforma';
+
+interface Props {
+  cityKey: string;
+}
+
+const { cityKey } = Astro.props;
+const city = getCityData(cityKey);
+
+interface Row {
+  label: string;
+  field: SourcedValue<number>;
+  format: (v: number) => string;
+}
+
+const rows: Row[] = [
+  { label: 'Land cost', field: city.inputs.landCost, format: formatCurrency },
+  { label: 'Hard cost per unit', field: city.inputs.hardCostPerUnit, format: formatCurrency },
+  { label: 'Soft costs', field: city.inputs.softCostPct, format: (v) => formatPct(v) },
+  { label: 'Permit timeline', field: city.inputs.permitMonths, format: (v) => `${v} mo` },
+  {
+    label: 'Construction timeline',
+    field: city.inputs.constructionMonths,
+    format: (v) => `${v} mo`,
+  },
+  { label: 'Construction loan rate', field: city.inputs.loanRate, format: (v) => formatPct(v, 2) },
+  { label: 'Monthly rent per unit', field: city.inputs.monthlyRent, format: formatCurrency },
+  { label: 'Vacancy & credit loss', field: city.inputs.vacancyPct, format: (v) => formatPct(v) },
+  { label: 'Operating expense ratio', field: city.inputs.opexRatio, format: (v) => formatPct(v) },
+  { label: 'Exit cap rate', field: city.inputs.exitCap, format: (v) => formatPct(v, 2) },
+  {
+    label: 'Required spread over exit cap (drives required return = exit cap + spread)',
+    field: REQUIRED_SPREAD,
+    format: (v) => formatPct(v, 2),
+  },
+];
+---
+
+<div class="sources-table-wrap">
+  <p class="eyebrow">Sources</p>
+  <h2 class="sources-table__heading">Where these numbers come from</h2>
+  <p class="sources-table__note">
+    Every input behind this report's pro forma, and whether it's been
+    checked against a real source yet.
+  </p>
+
+  <div class="sources-table__scroll">
+    <table class="sources-table">
+      <caption class="visually-hidden">Pro forma input sources for {city.label}</caption>
+      <thead>
+        <tr>
+          <th scope="col" class="mono">Input</th>
+          <th scope="col" class="mono">Value</th>
+          <th scope="col" class="mono">Source</th>
+          <th scope="col" class="mono">Year</th>
+          <th scope="col" class="mono">Link</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((row) => (
+            <tr data-status={row.field.status}>
+              <th scope="row">{row.label}</th>
+              <td class="mono sources-table__value">{row.format(row.field.value)}</td>
+              <td class="mono">
+                {row.field.status === 'placeholder' ? (
+                  <span class="pending-flag">PENDING</span>
+                ) : (
+                  row.field.source
+                )}
+              </td>
+              <td class="mono">{row.field.year ?? 'N/A'}</td>
+              <td class="mono">
+                {row.field.url ? (
+                  <a href={row.field.url} target="_blank" rel="noopener noreferrer">
+                    View source
+                  </a>
+                ) : (
+                  'N/A'
+                )}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .sources-table-wrap {
+    margin-top: var(--space-9);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .sources-table__heading {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .sources-table__note {
+    color: var(--color-muted);
+    font-size: 0.92rem;
+    max-width: 60ch;
+    margin-bottom: var(--space-6);
+  }
+
+  .sources-table__scroll {
+    overflow-x: auto;
+  }
+
+  .sources-table {
+    width: 100%;
+    min-width: 640px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    border-collapse: separate;
+    background: var(--pure-paper);
+    font-size: 0.85rem;
+  }
+
+  .sources-table thead th {
+    text-align: left;
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding: var(--space-3) var(--space-4);
+    background: var(--paper);
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+
+  .sources-table tbody tr {
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  .sources-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .sources-table th[scope='row'] {
+    text-align: left;
+    font-weight: 400;
+    padding: var(--space-3) var(--space-4);
+    color: var(--color-text);
+  }
+
+  .sources-table td {
+    padding: var(--space-3) var(--space-4);
+    color: var(--color-text-soft);
+    white-space: nowrap;
+  }
+
+  .sources-table__value {
+    color: var(--color-text);
+  }
+
+  .sources-table td a {
+    color: var(--color-accent-deep);
+  }
+</style>
