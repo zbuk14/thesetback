@@ -1,14 +1,29 @@
 ---
-import {
-  CITY_PRESETS,
-  CHART_GRIDLINES_PCT,
-  CONSTRAINT_COLOR_VARS,
-  calculateProForma,
-  formatPct,
-  getChartFraction,
-  getRequiredReturn,
-} from '../lib/proforma';
+import { CHART_GRIDLINES_PCT, CONSTRAINT_COLOR_VARS, formatPct, getChartFraction } from '../lib/proforma';
+import { calculateDcProforma } from '../lib/dcProforma';
 import dcData from '../data/dc-proforma.json';
+import cityData from '../data/city-proforma.json';
+
+// Benchmark now comes from the same R-01 engine and the same
+// city-proforma.json every other city on /calculator reads from — not a
+// second, independently-computed model. That's the exact bug this file
+// used to have with D.C. before it read straight from dc-proforma.json.
+function unwrapShared(shared: Record<string, { value: unknown }>) {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(shared)) out[k] = v.value;
+  return out;
+}
+
+const shared = unwrapShared(cityData.shared as Record<string, { value: unknown }>);
+const benchOverrides = Object.fromEntries(
+  Object.entries(cityData.cities.bench).filter(([, v]) => v && typeof v === 'object' && 'value' in (v as object))
+) as Record<string, { value: unknown }>;
+const benchRaw: Record<string, number> = {};
+for (const [k, v] of Object.entries({ ...shared, ...unwrapShared(benchOverrides) })) {
+  if (k !== 'unit_mix') benchRaw[k] = v as number;
+}
+const mix = shared.unit_mix as Record<string, { share: number; nrsf: number }>;
+const nrsfPerUnit = Object.values(mix).reduce((sum, u) => sum + u.share * u.nrsf, 0);
 
 // viewBox geometry
 const W = 480;
@@ -46,10 +61,10 @@ const dcColor = CONSTRAINT_COLOR_VARS.regulatory;
 const dcTop = yFor(dcRoc);
 const dcReqY = yFor(dcRequired);
 
-const benchmarkPreset = CITY_PRESETS.find((p) => p.isBenchmark)!;
-const benchmarkRequired = getRequiredReturn(benchmarkPreset.inputs.exitCap);
-const benchmarkResult = calculateProForma(benchmarkPreset.inputs, benchmarkRequired);
-const benchTop = yFor(benchmarkResult.returnOnCost);
+const benchmarkRaw = calculateDcProforma(benchRaw as never, nrsfPerUnit);
+const benchmarkRoc = benchmarkRaw.returnOnCost * 100;
+const benchmarkRequired = benchmarkRaw.requiredReturn * 100;
+const benchTop = yFor(benchmarkRoc);
 const benchReqY = yFor(benchmarkRequired);
 ---
 
@@ -76,7 +91,7 @@ const benchReqY = yFor(benchmarkRequired);
       dcRequired,
       2
     )}, a shortfall of ${dcGapBps} basis points. Benchmark return on cost ${formatPct(
-      benchmarkResult.returnOnCost,
+      benchmarkRoc,
       1
     )} against a required return of ${formatPct(benchmarkRequired, 2)}, which it clears.`}
   >
@@ -154,7 +169,7 @@ const benchReqY = yFor(benchmarkRequired);
       class="chart-preview__cap chart-preview__cap--muted"
     />
     <text x={benchCenter} y={benchTop - 8} class="chart-preview__value-label chart-preview__value-label--muted" text-anchor="middle">
-      {formatPct(benchmarkResult.returnOnCost, 1)}
+      {formatPct(benchmarkRoc, 1)}
     </text>
     <text x={benchCenter} y={plotY1 + 20} class="chart-preview__bar-label chart-preview__bar-label--muted" text-anchor="middle">
       Baseline

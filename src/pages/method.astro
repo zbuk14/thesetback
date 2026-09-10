@@ -221,6 +221,42 @@ import SetbackDivider from '../components/SetbackDivider.astro';
         assessed value, the assessed value depends on the income, and the
         income depends on the tax. The model loops until the three agree.
       </p>
+
+      <h2 id="calculator-sources">Calculator sources, all cities</h2>
+      <p>
+        The <a href="/calculator">pro forma calculator</a> runs the same
+        R-01 engine across Washington, D.C., Los Angeles, Detroit, San
+        Francisco, New York City and Miami, plus a frictionless benchmark.
+        Land, hard cost, rents, timelines, taxes and exit caps are set per
+        city in <code>src/data/city-proforma.json</code>; unit mix,
+        efficiency, and construction financing are held constant across
+        cities so only local conditions vary. Sources not already listed
+        above, for the other five cities:
+      </p>
+      <ul>
+        <li><a href="https://www.rlb.com/wp-content/uploads/sites/4/2026/03/Q1-2026-QCR.pdf" target="_blank" rel="noopener noreferrer">Rider Levett Bucknall, Quarterly Construction Cost Report Q1 2026 (PDF)</a>: multifamily $/SF for D.C., Los Angeles, San Francisco, New York, Miami</li>
+        <li>RentCafe / Yardi Matrix city rent pages: <a href="https://www.rentcafe.com/average-rent-market-trends/us/dc/washington/" target="_blank" rel="noopener noreferrer">D.C.</a>, <a href="https://www.rentcafe.com/average-rent-market-trends/us/ca/los-angeles/century-city/" target="_blank" rel="noopener noreferrer">Los Angeles</a>, <a href="https://www.rentcafe.com/average-rent-market-trends/us/ny/york/" target="_blank" rel="noopener noreferrer">New York</a>, <a href="https://www.rentcafe.com/average-rent-market-trends/us/mi/cement-city/" target="_blank" rel="noopener noreferrer">Detroit</a>, <a href="https://www.rentcafe.com/average-rent-market-trends/us/fl/florida-ridge/" target="_blank" rel="noopener noreferrer">Miami</a>, <a href="https://www.rentcafe.com/average-rent-market-trends/us/ca/lakeland-village/" target="_blank" rel="noopener noreferrer">San Francisco</a></li>
+        <li><a href="https://www.yardimatrix.com/multifamily-metro/page/3/" target="_blank" rel="noopener noreferrer">Yardi Matrix, Multifamily Metro Reports archive</a>: occupancy and rent trend by metro</li>
+        <li><a href="https://rejournals.com/detroit-multifamily-sector-enjoying-a-bit-of-momentum-in-early-2026/" target="_blank" rel="noopener noreferrer">REJournals, Detroit multifamily momentum, early 2026</a>: Detroit rent and occupancy via Yardi</li>
+        <li><a href="https://therealdeal.com/la/2024/02/27/study-finds-it-takes-nearly-four-years-to-build-apartments-in-la/" target="_blank" rel="noopener noreferrer">The Real Deal, LABCI study on L.A. approval and construction timelines</a>: 549 days entitlement, 863 days construction</li>
+        <li><a href="https://www.spur.org/sites/default/files/2021-02/presentation_by_oneill.pdf" target="_blank" rel="noopener noreferrer">SPUR / O'Neill, Berkeley Law Getting It Right data (PDF)</a>: median entitlement months by California jurisdiction</li>
+        <li><a href="https://www.its.ucla.edu/publication/does-discretion-delay-development" target="_blank" rel="noopener noreferrer">UCLA ITS, Does Discretion Delay Development?</a>: by-right projects permitted 28% faster in L.A.</li>
+        <li><a href="https://www.credaily.com/briefs/cbre-h1-2026-cap-rate-survey-finds-sentiment-split/" target="_blank" rel="noopener noreferrer">CRE Daily, CBRE H1 2026 Cap Rate Survey summary</a>: NYC stabilized multifamily 5% to 5.5%; infill multifamily most bearish</li>
+        <li><a href="https://www.credaily.com/?p=214876" target="_blank" rel="noopener noreferrer">CRE Daily, LoopNet 2026 multifamily city rankings</a>: Detroit 11.42% average cap rate</li>
+        <li><a href="https://www.lev.com/blog/multifamily-cap-rates-2026" target="_blank" rel="noopener noreferrer">Lev, Multifamily cap rates 2026</a>: Class A primary market 4.5% to 5.5%</li>
+        <li><a href="https://managecasa.com/articles/florida-rental-market" target="_blank" rel="noopener noreferrer">ManageCasa, Florida rental market 2026</a>: Miami vacancy, Florida insurance costs</li>
+      </ul>
+      <p>
+        Land is an estimate in every city but D.C., where it was
+        triangulated against asking prices and one transaction. Detroit
+        hard cost is a proxy; RLB does not cover the market. Property tax
+        rates for the four non-D.C. cities are effective-rate
+        approximations, not published statutory figures, because those
+        cities' effective rates depend on assessment practice. Entitlement
+        timelines for Detroit, Miami and New York are professional
+        estimates. Each of these is flagged ESTIMATE in
+        <code>city-proforma.json</code> and on the calculator page.
+      </p>
     </div>
   </section>
 </BaseLayout>
@@ -243,6 +279,21 @@ import SetbackDivider from '../components/SetbackDivider.astro';
   .method-prose h2 {
     font-size: 1.8rem;
     margin-bottom: var(--space-5);
+  }
+
+  .method-prose h2:not(:first-of-type) {
+    margin-top: var(--space-9);
+    padding-top: var(--space-7);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .method-prose code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--paper);
+    padding: 0.15em 0.4em;
+    border-radius: 2px;
+    color: var(--color-text);
   }
 
   .method-prose h3 {

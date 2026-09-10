@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ProFormaCalculator from '../components/ProFormaCalculator.tsx';
-import ReturnOnCostChart from '../components/ReturnOnCostChart.tsx';
+import CityProForma from '../components/CityProForma.tsx';
 ---
 
 <BaseLayout
@@ -13,24 +12,24 @@ import ReturnOnCostChart from '../components/ReturnOnCostChart.tsx';
       <p class="eyebrow">Interactive</p>
       <h1 class="calc-page__heading">One building. Every city's assumptions.</h1>
       <p class="standfirst">
-        Every report leans on this model as one piece of evidence: a
-        hypothetical 40-unit multifamily building, priced with that city's
-        land cost, permit timeline, construction cost, rents, and financing
-        terms. Change any input and watch return on cost move against the
-        required threshold.
+        Return on cost is what a finished building earns each year, divided
+        by what it cost to build. The number alone means little. What
+        matters is how it compares to the rate that finished buildings of
+        the same type actually trade at. That difference is the value a
+        developer creates by building rather than buying. Ground-up
+        apartments generally need at least 1.25 percentage points of
+        cushion to attract investors. So each city's threshold here is the
+        rate its finished buildings trade at, plus 1.25 points. Below that
+        line, the money goes somewhere else. The benchmark preset is the
+        same building with none of the frictions this publication studies:
+        cheap land, fast permits, cheap debt.
       </p>
     </div>
   </section>
 
   <section class="section calc-page__calc">
     <div class="container">
-      <ProFormaCalculator client:visible initialPresetKey="dc" showPresetSwitcher={true} />
-    </div>
-  </section>
-
-  <section class="section calc-page__chart" data-reveal>
-    <div class="container">
-      <ReturnOnCostChart client:visible />
+      <CityProForma client:visible />
     </div>
   </section>
 </BaseLayout>
@@ -43,10 +42,6 @@ import ReturnOnCostChart from '../components/ReturnOnCostChart.tsx';
   }
 
   .calc-page__calc {
-    padding-top: 0;
-  }
-
-  .calc-page__chart {
     padding-top: 0;
   }
 </style>

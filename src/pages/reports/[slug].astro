@@ -84,7 +84,7 @@ const dateFormatted = publishDate
               {constraintTypes.map((c) => constraintLabel[c]).join(' + ')}
             </span>
             <span class="mono report-meta-row__sub">
-              Vintage {dataVintage ?? 'pending'} · Updated {dateFormatted ?? 'pending'}
+              Vintage {dataVintage ?? 'pending'} · {status === 'published' ? 'Published' : 'Updated'} {dateFormatted ?? 'pending'}
             </span>
           </div>
         </div>
