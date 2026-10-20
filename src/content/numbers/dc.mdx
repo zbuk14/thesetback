@@ -1,0 +1,121 @@
+---
+report: "dc"
+title: "The numbers behind Washington"
+dek: "How a forty-unit building goes from $16.3 million in cost to $11.6 million in value."
+part: 2
+companion: "/reports/dc"
+---
+
+import SourcedProForma from '../../components/SourcedProForma.tsx';
+
+The main report says a normal Washington apartment building loses $4.8 million the day it opens. This piece shows where that number comes from. No finance background needed. Every term gets explained the first time it shows up.
+
+## The building
+
+Forty units, sized and priced to Washington's averages:
+
+| Unit | Count | Size | Rent |
+|---|---|---|---|
+| Studio | 10 | 484 sq ft | $1,821/mo |
+| One-bedroom | 22 | 697 sq ft | $2,302/mo |
+| Two-bedroom | 8 | 996 sq ft | $3,090/mo |
+
+The apartments add up to about 28,100 square feet. Hallways, stairs, lobby and walls add more. Assume 80 percent of the building is rentable. That makes the whole building about 35,200 square feet.
+
+## Step 1: What it costs to build
+
+Developers split costs into a few buckets.
+
+**Land.** The lot costs about $2.4 million. This is an estimate. Later we show the conclusion holds no matter what the land costs.
+
+**Hard costs.** The physical building: concrete, steel, wiring, labor. In Washington this runs about $275 per square foot. Across 35,200 square feet, that is about $9.7 million.
+
+**Parking.** The city expects roughly one space for every two units. Underground spaces cost about $35,000 each. Twenty spaces is $700,000.
+
+**Soft costs.** Everything that is not physical: architects, engineers, lawyers, permit fees, insurance. Assume 20 percent of land, building and parking. About $2.6 million.
+
+**Interest.** Developers borrow most of the money, and loans charge interest while the building goes up. This shows up twice.
+
+- *During approval* (14 months). Only the land exists, so interest is paid on the land loan. At 8 percent, that is about $224,000.
+- *During construction* (18 months). The loan grows as money gets spent. Early on almost nothing is borrowed. By the end, nearly all of it is. On average, about half the loan is out. Interest comes to about $776,000.
+
+**Total: about $16.3 million.** That is about $408,000 per apartment.
+
+## Step 2: What it earns each year
+
+**Full rent.** If every unit rented at full price every month, the building would collect about $1.2 million a year.
+
+**Affordable units.** Washington requires about 10 percent of units to rent at below-market prices, around $1,550 a month. That trims income.
+
+**Vacancy.** Units sit empty between tenants, and some tenants do not pay. Assume 7 percent of rent is lost.
+
+**Other income.** Laundry, storage and fees add about 3 percent.
+
+After those adjustments, the building collects about $1.09 million a year.
+
+**Operating costs.** Running the building costs money: maintenance, staff, insurance, utilities in common areas. About $9,500 per unit, or $380,000 a year.
+
+**Property tax.** Washington charges 0.85 percent of the building's value every year. About $98,000.
+
+What is left after all expenses is called **net operating income**, or NOI. It is the building's yearly profit before paying back any loans.
+
+**NOI: about $607,000 a year.**
+
+## Step 3: What it is worth
+
+Buyers price apartment buildings with a simple shortcut called the **cap rate**. It is the yearly income a buyer expects per dollar they pay.
+
+A 5.25 percent cap rate means a buyer will pay about $100 for every $5.25 of yearly income. That is the going rate for Washington apartments right now.
+
+So the building is worth its income divided by the cap rate:
+
+> $607,000 ÷ 0.0525 = **$11.6 million**
+
+It cost $16.3 million. It is worth $11.6 million. The gap is **$4.8 million**.
+
+## Step 4: Why investors walk away
+
+The cleanest single test is **return on cost**. It is the yearly income divided by what the building cost.
+
+> $607,000 ÷ $16.3 million = **3.7 percent**
+
+A developer could buy an existing building and earn the 5.25 percent cap rate with no construction risk at all. Building from scratch is slower and riskier, so investors want extra on top. A typical cushion is about 1.25 points.
+
+> 5.25% + 1.25% = **6.5 percent needed**
+
+The building earns 3.7 percent. It needs 6.5. Nobody builds it.
+
+## Step 5: What each fix is worth
+
+Now we can test reforms one at a time and see how far each one moves the 3.7 percent.
+
+**Faster approvals.** Cutting approval from 14 months to 4 saves ten months of interest on the land loan. That is about $160,000, out of $16.3 million. Return goes from 3.72 to 3.75 percent. Barely visible.
+
+This is the number most permitting debates get wrong. During approval, only the land is being financed. The expensive part, the building, has not been borrowed for yet.
+
+**Every zoning reform together.** Automatic approval, four-month review, no parking requirement, cheaper code rules and no affordable-unit requirement, all at once. Return goes to about **4.4 percent**. That closes roughly a quarter of the gap.
+
+**A property tax break.** Taking away the $98,000 tax bill raises income directly. Return goes to about 4.3 percent. That is nearly the whole zoning package from one change.
+
+<SourcedProForma client:visible />
+
+Drag any slider in the calculator to test your own assumption.
+
+## Step 6: Why land price does not matter
+
+Land is the one input we could not confirm. So flip the question. What is the most a builder could pay for the land and still hit 6.5 percent?
+
+The answer is below zero. Someone would have to pay the builder about **$1.5 million** to take the lot.
+
+That means the conclusion does not depend on land at all. Even free land leaves the building short. Any fight over the right land price changes nothing.
+
+## Where the inputs come from
+
+Every input in the calculator is tagged with its source and how solid it is:
+
+- <span className="spf-chip spf-chip--verified">Verified</span> taken directly from a published source.
+- <span className="spf-chip spf-chip--verified-range">Verified range</span> the source gives a range, and we picked a point inside it.
+- <span className="spf-chip spf-chip--derived">Derived</span> calculated from published figures.
+- <span className="spf-chip spf-chip--estimate">Estimate</span> our best judgment, flagged for checking.
+
+Full sources and modeling notes are on the [Method page →](/method#r-01)
