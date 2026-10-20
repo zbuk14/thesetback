@@ -1,121 +1,118 @@
 ---
 report: "dc"
 title: "The numbers behind Washington"
-dek: "How a forty-unit building goes from $16.3 million in cost to $11.6 million in value."
+dek: "A 40-unit pro forma. Return on cost 3.72 percent against a 6.50 percent hurdle."
 part: 2
 companion: "/reports/dc"
 ---
 
 import SourcedProForma from '../../components/SourcedProForma.tsx';
 
-The main report says a normal Washington apartment building loses $4.8 million the day it opens. This piece shows where that number comes from. No finance background needed. Every term gets explained the first time it shows up.
+One building, underwritten at D.C. market inputs. Every figure below comes from the calculator at the end of this page.
 
-## The building
+## 1. Program
 
-Forty units, sized and priced to Washington's averages:
+| | Units | Net SF | Rent / mo |
+|---|---:|---:|---:|
+| Studio | 10 | 484 | $1,821 |
+| One-bedroom | 22 | 697 | $2,302 |
+| Two-bedroom | 8 | 996 | $3,090 |
+| **Total** | **40** | **28,142** | **$2,450 avg** |
 
-| Unit | Count | Size | Rent |
-|---|---|---|---|
-| Studio | 10 | 484 sq ft | $1,821/mo |
-| One-bedroom | 22 | 697 sq ft | $2,302/mo |
-| Two-bedroom | 8 | 996 sq ft | $3,090/mo |
+Efficiency 80 percent. Gross building area 35,178 SF.
 
-The apartments add up to about 28,100 square feet. Hallways, stairs, lobby and walls add more. Assume 80 percent of the building is rentable. That makes the whole building about 35,200 square feet.
+## 2. Development budget
 
-## Step 1: What it costs to build
+| Line | Basis | Total | Per unit | Share |
+|---|---|---:|---:|---:|
+| Land | estimate | $2,400,000 | $60,000 | 14.7% |
+| Hard cost | $275 / gross SF | $9,673,812 | $241,845 | 59.2% |
+| Parking | 20 spaces × $35,000 | $700,000 | $17,500 | 4.3% |
+| Soft cost | 20% × (land + hard + parking) | $2,554,762 | $63,869 | 15.6% |
+| Entitlement carry | land × 8% × 14/12 | $224,000 | $5,600 | 1.4% |
+| Construction carry | (hard + parking + soft) × 50% × 8% × 18/12 | $775,715 | $19,393 | 4.8% |
+| **Total development cost** | | **$16,328,290** | **$408,207** | **100%** |
 
-Developers split costs into a few buckets.
+Entitlement carry runs on land only. The building is not financed until construction starts.
 
-**Land.** The lot costs about $2.4 million. This is an estimate. Later we show the conclusion holds no matter what the land costs.
+Construction carry uses the average drawn balance. The loan funds in over 18 months, so on average half is outstanding.
 
-**Hard costs.** The physical building: concrete, steel, wiring, labor. In Washington this runs about $275 per square foot. Across 35,200 square feet, that is about $9.7 million.
+## 3. Stabilized operations
 
-**Parking.** The city expects roughly one space for every two units. Underground spaces cost about $35,000 each. Twenty spaces is $700,000.
+| Line | Basis | Annual |
+|---|---|---:|
+| Gross potential rent | 40 × $2,450 × 12 | $1,176,000 |
+| Inclusionary zoning discount | 4 units × ($2,450 − $1,550) × 12 | −$43,200 |
+| Other income | +3% | +$33,984 |
+| Vacancy and credit loss | −7% | −$81,675 |
+| **Effective gross income** | | **$1,085,109** |
+| Operating expenses | $9,500 / unit | −$380,000 |
+| Property tax | 0.85% of value | −$98,253 |
+| **Net operating income (NOI)** | | **$606,856** |
 
-**Soft costs.** Everything that is not physical: architects, engineers, lawyers, permit fees, insurance. Assume 20 percent of land, building and parking. About $2.6 million.
+Expense ratio 44 percent of income.
 
-**Interest.** Developers borrow most of the money, and loans charge interest while the building goes up. This shows up twice.
+Tax is circular. It is charged on value, and value depends on NOI after tax. Solved directly:
 
-- *During approval* (14 months). Only the land exists, so interest is paid on the land loan. At 8 percent, that is about $224,000.
-- *During construction* (18 months). The loan grows as money gets spent. Early on almost nothing is borrowed. By the end, nearly all of it is. On average, about half the loan is out. Interest comes to about $776,000.
+> NOI = (EGI − opex) ÷ (1 + tax rate ÷ cap rate)
+> = $705,109 ÷ 1.162 = $606,856
 
-**Total: about $16.3 million.** That is about $408,000 per apartment.
+## 4. Value and return
 
-## Step 2: What it earns each year
+> Value = NOI ÷ cap rate = $606,856 ÷ 5.25% = **$11,559,166**
+>
+> Value − cost = **−$4,769,124**
+>
+> Return on cost = NOI ÷ cost = **3.72%**
+>
+> Hurdle = cap rate + developer spread = 5.25% + 1.25% = **6.50%**
+>
+> Gap = **278 bps**
 
-**Full rent.** If every unit rented at full price every month, the building would collect about $1.2 million a year.
+The spread is the premium for construction and lease-up risk over buying a finished asset at the cap rate.
 
-**Affordable units.** Washington requires about 10 percent of units to rent at below-market prices, around $1,550 a month. That trims income.
+## 5. Lever attribution
 
-**Vacancy.** Units sit empty between tenants, and some tenants do not pay. Assume 7 percent of rent is lost.
+Each lever run alone against base. The package runs all zoning reforms together.
 
-**Other income.** Laundry, storage and fees add about 3 percent.
+| Lever | Return on cost | Change | Share of gap |
+|---|---:|---:|---:|
+| Base | 3.72% | | |
+| Entitlement 14 → 4 months | 3.75% | +4 bps | 1% |
+| No parking minimum | 3.93% | +21 bps | 8% |
+| No inclusionary set-aside | 3.93% | +22 bps | 8% |
+| **Full zoning package** | **4.37%** | **+66 bps** | **24%** |
+| Property tax to zero | 4.32% | +60 bps | 22% |
+| Rent +10% | 4.25% | +53 bps | 19% |
 
-After those adjustments, the building collects about $1.09 million a year.
+Components do not sum to the package. Levers interact.
 
-**Operating costs.** Running the building costs money: maintenance, staff, insurance, utilities in common areas. About $9,500 per unit, or $380,000 a year.
+Entitlement is the weakest lever by an order of magnitude. Ten months of carry on $2.4 million of land is $160,000, or 1 percent of cost.
 
-**Property tax.** Washington charges 0.85 percent of the building's value every year. About $98,000.
+## 6. Breakevens
 
-What is left after all expenses is called **net operating income**, or NOI. It is the building's yearly profit before paying back any loans.
+What each input would need to be, alone, to hit 6.50 percent:
 
-**NOI: about $607,000 a year.**
+| Input | Base | Breakeven | Move |
+|---|---:|---:|---:|
+| Average rent | $2,450 | $3,726 | +52% |
+| Hard cost / SF | $275 | $119 | −57% |
+| Land | $2.4M | −$2.96M | n/a |
 
-## Step 3: What it is worth
+Under the full zoning package, residual land value is still **−$1.48 million**. The deal fails at any land price, so land drops out of the argument.
 
-Buyers price apartment buildings with a simple shortcut called the **cap rate**. It is the yearly income a buyer expects per dollar they pay.
+## 7. Sensitivity
 
-A 5.25 percent cap rate means a buyer will pay about $100 for every $5.25 of yearly income. That is the going rate for Washington apartments right now.
+Value minus cost, $ millions.
 
-So the building is worth its income divided by the cap rate:
+| Cap rate ↓ / Rent → | $2,205 (−10%) | $2,450 | $2,695 (+10%) |
+|---|---:|---:|---:|
+| 4.75% | −5.5 | −3.7 | −1.9 |
+| **5.25%** | −6.4 | **−4.8** | −3.1 |
+| 5.75% | −7.2 | −5.6 | −4.1 |
 
-> $607,000 ÷ 0.0525 = **$11.6 million**
-
-It cost $16.3 million. It is worth $11.6 million. The gap is **$4.8 million**.
-
-## Step 4: Why investors walk away
-
-The cleanest single test is **return on cost**. It is the yearly income divided by what the building cost.
-
-> $607,000 ÷ $16.3 million = **3.7 percent**
-
-A developer could buy an existing building and earn the 5.25 percent cap rate with no construction risk at all. Building from scratch is slower and riskier, so investors want extra on top. A typical cushion is about 1.25 points.
-
-> 5.25% + 1.25% = **6.5 percent needed**
-
-The building earns 3.7 percent. It needs 6.5. Nobody builds it.
-
-## Step 5: What each fix is worth
-
-Now we can test reforms one at a time and see how far each one moves the 3.7 percent.
-
-**Faster approvals.** Cutting approval from 14 months to 4 saves ten months of interest on the land loan. That is about $160,000, out of $16.3 million. Return goes from 3.72 to 3.75 percent. Barely visible.
-
-This is the number most permitting debates get wrong. During approval, only the land is being financed. The expensive part, the building, has not been borrowed for yet.
-
-**Every zoning reform together.** Automatic approval, four-month review, no parking requirement, cheaper code rules and no affordable-unit requirement, all at once. Return goes to about **4.4 percent**. That closes roughly a quarter of the gap.
-
-**A property tax break.** Taking away the $98,000 tax bill raises income directly. Return goes to about 4.3 percent. That is nearly the whole zoning package from one change.
+No cell clears zero.
 
 <SourcedProForma client:visible />
 
-Drag any slider in the calculator to test your own assumption.
-
-## Step 6: Why land price does not matter
-
-Land is the one input we could not confirm. So flip the question. What is the most a builder could pay for the land and still hit 6.5 percent?
-
-The answer is below zero. Someone would have to pay the builder about **$1.5 million** to take the lot.
-
-That means the conclusion does not depend on land at all. Even free land leaves the building short. Any fight over the right land price changes nothing.
-
-## Where the inputs come from
-
-Every input in the calculator is tagged with its source and how solid it is:
-
-- <span className="spf-chip spf-chip--verified">Verified</span> taken directly from a published source.
-- <span className="spf-chip spf-chip--verified-range">Verified range</span> the source gives a range, and we picked a point inside it.
-- <span className="spf-chip spf-chip--derived">Derived</span> calculated from published figures.
-- <span className="spf-chip spf-chip--estimate">Estimate</span> our best judgment, flagged for checking.
-
-Full sources and modeling notes are on the [Method page →](/method#r-01)
+Inputs, sources and status flags: [Method →](/method#r-01)

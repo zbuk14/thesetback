@@ -406,14 +406,32 @@ const hasHero = Astro.slots.has('hero');
     border-bottom: none;
   }
 
-  /* Worked equations. A blockquote in a report is a calculation callout,
-     not a pull quote: mono, tinted box, no italics. */
+  /* Numeric columns (right-aligned in the markdown) read in mono, with
+     figures that line up. Bold rows are totals. */
+  .report-prose :global(th[style*='text-align:right']),
+  .report-prose :global(td[style*='text-align:right']) {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .report-prose :global(td strong) {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .report-prose :global(tbody tr:has(> td:first-child > strong)) {
+    background: rgba(58, 107, 126, 0.05);
+  }
+
+  /* Worked equations. A blockquote in a report is a calculation block,
+     not a pull quote: mono, tinted box, no italics, no quote bar. Line
+     breaks inside the block are kept. */
   .report-prose :global(blockquote) {
     margin: 0 0 var(--space-5);
     padding: var(--space-4) var(--space-5);
     background: rgba(58, 107, 126, 0.06);
     border: 1px solid var(--color-border-soft);
-    border-left: 3px solid var(--accent);
     border-radius: 3px;
     overflow-x: auto;
   }
@@ -422,9 +440,14 @@ const hasHero = Astro.slots.has('hero');
     margin: 0;
     font-family: var(--font-mono);
     font-style: normal;
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 0.92rem;
+    line-height: 1.7;
     color: var(--ink);
+    white-space: pre-line;
+  }
+
+  .report-prose :global(blockquote p + p) {
+    margin-top: var(--space-3);
   }
 
   .report-prose :global(blockquote strong) {
