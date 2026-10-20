@@ -81,7 +81,9 @@ const pageTitle = title === 'The Setback' ? title : `${title} · The Setback`;
           }
         }
       },
-      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }
+      // threshold 0: a fractional threshold can never be met by a block taller
+      // than the viewport, which left long sections invisible.
+      { threshold: 0, rootMargin: '0px 0px -10% 0px' }
     );
 
     targets.forEach((el) => {

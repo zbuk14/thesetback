@@ -1,0 +1,62 @@
+---
+kind: report
+reportNumber: R-01
+city: Washington, D.C.
+order: 1
+inputs:
+  - { id: units, label: Units }
+  - { id: unit_mix, label: Unit mix and rents, source: RentCafe }
+  - { id: efficiency_ratio, label: Efficiency (rentable ÷ total), source: D.C. Policy Center }
+  - { id: land_cost, label: Land, source: LoopNet }
+  - { id: hard_cost_psf, label: Construction cost per sq ft, source: RLB Q1 2026 }
+  - { id: parking_ratio, label: Parking spaces per unit, source: D.C. Policy Center }
+  - { id: parking_cost_per_space, label: Cost per parking space, source: D.C. Policy Center }
+  - { id: soft_cost_pct, label: Fees and design }
+  - { id: entitlement_months, label: Approval timeline, source: D.C. Department of Buildings }
+  - { id: construction_months, label: Construction timeline }
+  - { id: construction_loan_rate, label: Construction loan rate, source: CLS CRE, decimals: 2 }
+  - { id: achievable_rent, label: Average rent, source: RentCafe }
+  - { id: iz_set_aside_pct, label: Affordable-unit share, source: D.C. Policy Center }
+  - { id: iz_rent, label: Affordable-unit rent, source: DHCD 2026 schedule }
+  - { id: vacancy_credit_loss, label: Empty units and unpaid rent, source: Yardi Matrix }
+  - { id: other_income_pct, label: Other income }
+  - { id: opex_per_unit, label: Running costs per unit, suffix: / year }
+  - { id: property_tax_rate, label: Property tax rate, source: D.C. Office of Tax and Revenue, decimals: 2 }
+  - { id: exit_cap_rate, label: Cap rate, source: CBRE H1 2026, decimals: 2 }
+  - { id: developer_spread, label: Risk premium for building new, decimals: 2 }
+---
+
+import InputsTable from '../../components/InputsTable.astro';
+
+### Inputs
+
+Every input carries a status:
+
+- **Verified.** Taken directly from a published source.
+- **Verified range.** The source gives a range. We picked a point inside it.
+- **Derived.** Calculated from published figures.
+- **Estimate.** Our judgment, flagged for checking.
+- **Assumption.** A modeling choice.
+
+<InputsTable manifest="dc-proforma" rows={frontmatter.inputs} />
+
+### Other sources in the report
+
+- Permits by year: [U.S. Census Bureau Building Permits Survey via FRED](https://fred.stlouisfed.org/series/DCBPPRIV)
+- Zoning share, appeals and appeal delays: [D.C. Policy Center](https://www.dcpolicycenter.org/publications/breaking-the-scarcity-subsidy-cycle-a-new-housing-vision-for-the-district-of-columbia/)
+- Permit review times: [D.C. Department of Buildings](https://dob.dc.gov/publication/plan-review-and-permit-timelines-service-level-agreements)
+
+### What we're checking next
+
+These estimates are being checked against real project data from a D.C.-area construction firm:
+
+- Fees and design percentage
+- Approval timeline
+- Construction timeline
+- Running costs per unit
+
+Land is not on the list. The building fails even with free land, so the land estimate doesn't change the conclusion.
+
+### Reproduce it
+
+The full model is a standalone Python script. Same inputs, same outputs as the calculator. [Download dc-model.py](/models/dc-model.py)

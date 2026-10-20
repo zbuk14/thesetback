@@ -1,0 +1,214 @@
+---
+/**
+ * Inputs table for a report's Method section. Values, statuses and source
+ * URLs come straight from the report's input manifest (the same JSON the
+ * calculator reads), so they cannot drift. Each row only supplies the
+ * plain-English label, the source's display name, and optional formatting.
+ *
+ * Throws at build time if a row names an input the manifest doesn't have,
+ * or the manifest has an input no row covers.
+ */
+import '../components/SourcedProForma.css';
+import { formatPercent, formatUsd } from '../lib/dcProforma';
+import { STATUS_LABEL, statusChipClass, type InputStatus } from '../lib/inputStatus';
+
+interface Row {
+  id: string;
+  label: string;
+  /** Display name for the source link. Omit when the manifest has no URL. */
+  source?: string;
+  /** Percent rows: decimals to show. Default is none for whole numbers, else two. */
+  decimals?: number;
+  /** Appended after the formatted value, e.g. "/ year". */
+  suffix?: string;
+}
+
+interface ManifestInput {
+  id: string;
+  value: number | Record<string, { count: number }>;
+  unit?: string;
+  status: InputStatus;
+  url: string | null;
+}
+
+interface Props {
+  /** Filename in src/data/ without the extension, e.g. "dc-proforma". */
+  manifest: string;
+  rows: Row[];
+}
+
+const { manifest, rows } = Astro.props as Props;
+
+const files = import.meta.glob<{ default: { inputs: ManifestInput[] } }>('../data/*.json', {
+  eager: true,
+});
+const file = files[`../data/${manifest}.json`];
+if (!file) throw new Error(`InputsTable: no manifest at src/data/${manifest}.json`);
+
+const byId = new Map(file.default.inputs.map((input) => [input.id, input]));
+
+const missing = file.default.inputs.filter((i) => !rows.some((r) => r.id === i.id));
+if (missing.length) {
+  throw new Error(
+    `InputsTable: ${manifest}.json has inputs with no row: ${missing.map((i) => i.id).join(', ')}`
+  );
+}
+
+const MIX_NAME: Record<string, string> = {
+  studio: 'studio',
+  one_br: 'one-bed',
+  two_br: 'two-bed',
+};
+
+function formatValue(input: ManifestInput, row: Row): string {
+  const { value, unit } = input;
+  if (typeof value !== 'number') {
+    return Object.entries(value)
+      .map(([key, mix]) => `${mix.count} ${MIX_NAME[key] ?? key}`)
+      .join(' / ');
+  }
+  let text: string;
+  switch (unit) {
+    case 'usd':
+    case 'usd_per_sf':
+    case 'usd_per_month':
+      text = formatUsd(value);
+      break;
+    case 'percent':
+    case 'percent_of_assessed_value': {
+      // 0.07 * 100 is 7.000000000000001, so compare with a tolerance.
+      const whole = Math.abs(value * 100 - Math.round(value * 100)) < 1e-9;
+      text = formatPercent(value, row.decimals ?? (whole ? 0 : 2));
+      break;
+    }
+    case 'ratio':
+      text = value.toFixed(2);
+      break;
+    case 'months':
+      text = `${value} months`;
+      break;
+    default:
+      text = String(value);
+  }
+  if (unit === 'usd_per_month') text += ' / month';
+  return row.suffix ? `${text} ${row.suffix}` : text;
+}
+
+const lines = rows.map((row) => {
+  const input = byId.get(row.id);
+  if (!input) throw new Error(`InputsTable: "${row.id}" is not in ${manifest}.json`);
+  return {
+    label: row.label,
+    value: formatValue(input, row),
+    status: input.status,
+    sourceLabel: row.source,
+    url: input.url,
+  };
+});
+---
+
+<div class="inputs-table">
+  <table>
+    <thead>
+      <tr>
+        <th>Input</th>
+        <th class="num">Value</th>
+        <th>Status</th>
+        <th>Source</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        lines.map((line) => (
+          <tr>
+            <td class="name">{line.label}</td>
+            <td class="num">{line.value}</td>
+            <td>
+              <span class={statusChipClass(line.status)}>{STATUS_LABEL[line.status]}</span>
+            </td>
+            <td>
+              {line.url && line.sourceLabel && (
+                <a href={line.url} target="_blank" rel="noopener noreferrer">
+                  {line.sourceLabel}
+                </a>
+              )}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  /* Same look as the scorecard. The wrapper scrolls, never the page. */
+  .inputs-table {
+    margin-bottom: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--pure-paper);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  thead {
+    background: var(--paper);
+  }
+
+  th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border-soft);
+    color: var(--color-text-soft);
+    vertical-align: baseline;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .name {
+    min-width: 12em;
+    color: var(--color-text);
+  }
+
+  td:nth-child(3) {
+    white-space: nowrap;
+  }
+
+  .num {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  td a {
+    color: var(--color-text);
+    text-decoration-color: var(--color-border);
+    text-underline-offset: 2px;
+  }
+
+  td a:hover {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
+</style>

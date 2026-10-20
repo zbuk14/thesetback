@@ -63,4 +63,37 @@ const numbers = defineCollection({
   }),
 });
 
-export const collections = { reports, numbers };
+// The Method page. `general.md` holds the sections that apply to every
+// report. Each report adds one file here (r-01.mdx, r-02.mdx, ...) and the
+// page lists them in `order`. See docs/report-template.md.
+const method = defineCollection({
+  type: 'content',
+  schema: z.discriminatedUnion('kind', [
+    z.object({
+      kind: z.literal('general'),
+      title: z.string(),
+      standfirst: z.string(),
+    }),
+    z.object({
+      kind: z.literal('report'),
+      // Becomes the anchor: "R-01" -> /method#r-01
+      reportNumber: z.string(),
+      city: z.string(),
+      order: z.number(),
+      // One row per input in the report's manifest; see InputsTable.astro.
+      inputs: z
+        .array(
+          z.object({
+            id: z.string(),
+            label: z.string(),
+            source: z.string().optional(),
+            decimals: z.number().optional(),
+            suffix: z.string().optional(),
+          })
+        )
+        .optional(),
+    }),
+  ]),
+});
+
+export const collections = { reports, numbers, method };

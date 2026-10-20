@@ -53,6 +53,10 @@ const metrics = [
       }
     </div>
 
+    <p class="method-band__more">
+      <a href="/method">Full method →</a>
+    </p>
+
     <p class="mono method-band__source">
       Source: U.S. Census Building Permits Survey · HUD · FRED · municipal
       planning departments
@@ -126,8 +130,26 @@ const metrics = [
     line-height: 1.5;
   }
 
+  .method-band__more {
+    margin-top: var(--space-7);
+  }
+
+  .method-band__more a {
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-decoration: underline;
+    text-decoration-color: rgba(247, 245, 240, 0.4);
+    text-underline-offset: 3px;
+  }
+
+  .method-band__more a:hover {
+    text-decoration-color: var(--paper);
+  }
+
   .method-band__source {
-    margin-top: var(--space-8);
+    margin-top: var(--space-5);
     font-size: 0.7rem;
     letter-spacing: 0.03em;
     color: rgba(247, 245, 240, 0.4);

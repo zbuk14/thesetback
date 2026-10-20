@@ -114,5 +114,6 @@ The Part 2 page adds the `R-02 · The Numbers` eyebrow, the "← Back to the rep
 2. Write `src/content/reports/<slug>.mdx` (Part 1).
 3. Write `src/content/numbers/<slug>.mdx` (Part 2).
 4. Add the cover image next to the Part 1 file.
-5. `npm run build`. Open both pages at desktop width and at 375px.
-6. Confirm the calculator on Part 2 shows the same figures the prose quotes.
+5. Write `src/content/method/<report-number>.mdx` (for example `r-02.mdx`). Copy `r-01.mdx`: set `reportNumber`, `city`, `order`, and list every input in the manifest under `inputs`. The page picks the file up on its own and the section anchor is the report number in lowercase (`/method#r-02`). The Inputs table is built from the manifest by `InputsTable.astro`, and the build fails if an input has no row.
+6. `npm run build`. Open both pages and `/method#<report-id>` at desktop width and at 375px.
+7. Confirm the calculator on Part 2 shows the same figures the prose quotes.

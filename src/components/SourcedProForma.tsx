@@ -6,10 +6,9 @@ import {
   formatUsd,
   type DcInputValues,
 } from '../lib/dcProforma';
+import { STATUS_LABEL, statusChipClass, type InputStatus as Status } from '../lib/inputStatus';
 import dcData from '../data/dc-proforma.json';
 import './SourcedProForma.css';
-
-type Status = 'VERIFIED' | 'VERIFIED_RANGE' | 'DERIVED' | 'ESTIMATE' | 'ASSUMPTION';
 
 interface SliderSpec {
   min: number;
@@ -102,17 +101,9 @@ function formatValueForUnit(value: number, unit: string | undefined, id: string)
   }
 }
 
-const STATUS_LABEL: Record<Status, string> = {
-  VERIFIED: 'Verified',
-  VERIFIED_RANGE: 'Verified range',
-  DERIVED: 'Derived',
-  ESTIMATE: 'Estimate',
-  ASSUMPTION: 'Assumption',
-};
-
 function StatusChip({ status, url }: { status: Status; url: string | null }) {
   const label = STATUS_LABEL[status];
-  const chipClass = `spf-chip spf-chip--${status.toLowerCase().replace('_', '-')}`;
+  const chipClass = statusChipClass(status);
   if (url) {
     return (
       <a className={chipClass} href={url} target="_blank" rel="noopener noreferrer">
