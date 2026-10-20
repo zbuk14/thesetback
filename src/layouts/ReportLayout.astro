@@ -1,0 +1,496 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import StatusTag from '../components/StatusTag.astro';
+
+type Status = CollectionEntry<'reports'>['data']['status'];
+
+interface Props {
+  title: string;
+  description: string;
+  reportNumber: string;
+  status: Status;
+  constraintTypes: string[];
+  dataVintage?: string;
+  publishDate?: Date;
+  headline: string;
+  dek: string;
+  author?: string;
+  eyebrow?: string;
+  /** 'report' is Part 1 (city name as the headline). 'numbers' is Part 2. */
+  variant?: 'report' | 'numbers';
+}
+
+const {
+  title,
+  description,
+  reportNumber,
+  status,
+  constraintTypes,
+  dataVintage,
+  publishDate,
+  headline,
+  dek,
+  author,
+  eyebrow,
+  variant = 'report',
+} = Astro.props;
+
+const constraintLabel: Record<string, string> = {
+  regulatory: 'Regulatory',
+  capital: 'Capital',
+  structural: 'Structural',
+};
+
+// YAML frontmatter dates parse as UTC midnight; format in UTC too, or a
+// negative-offset local timezone rolls the displayed date back a day.
+const dateFormatted = publishDate
+  ? new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      timeZone: 'UTC',
+    }).format(publishDate)
+  : null;
+
+const hasHero = Astro.slots.has('hero');
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="report">
+    <header class="report-hero-type">
+      <div class="report-meta-row">
+        <div class="container report-meta-row__inner">
+          <div class="report-meta-row__item">
+            <span class="mono">{reportNumber}</span>
+            <StatusTag status={status} />
+          </div>
+          <div class="report-meta-row__item report-meta-row__item--right">
+            <span class="mono">
+              {constraintTypes.map((c) => constraintLabel[c]).join(' + ')}
+            </span>
+            <span class="mono report-meta-row__sub">
+              Vintage {dataVintage ?? 'pending'} · {status === 'published' ? 'Published' : 'Updated'} {dateFormatted ?? 'pending'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-hero-clip">
+        <div class="container">
+          {eyebrow && <p class="mono report-hero-eyebrow">{eyebrow}</p>}
+          <h1 class:list={['report-hero-type__name', { 'report-hero-type__name--title': variant === 'numbers' }]}>
+            {headline}
+          </h1>
+        </div>
+      </div>
+
+      <div class="container report-header-dek">
+        <p class="standfirst">{dek}</p>
+        {author && <p class="mono report-header-byline">By {author}</p>}
+      </div>
+    </header>
+
+    {
+      hasHero && (
+        <div class="container report-hero">
+          <slot name="hero" />
+        </div>
+      )
+    }
+
+    <div class="container report-layout">
+      <slot name="before-prose" />
+
+      <div class:list={['report-prose', 'measure', { 'report-prose--numbers': variant === 'numbers' }]}>
+        <slot />
+      </div>
+
+      <slot name="after-prose" />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  /* Everything in the header (metadata row, oversized name, dek) aligns
+     to the same .container edges. The name is the only thing allowed to
+     escape that grid, and only to the right, clipped at the viewport. */
+
+  .report-meta-row {
+    position: sticky;
+    top: 88px;
+    z-index: 30;
+    background: var(--paper);
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  .report-meta-row__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding-block: var(--space-3);
+  }
+
+  .report-meta-row__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .report-meta-row__item--right {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3em;
+    text-align: right;
+  }
+
+  .report-meta-row__sub {
+    color: var(--color-muted);
+    letter-spacing: 0.03em;
+  }
+
+  @media (max-width: 640px) {
+    .report-meta-row__item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+
+    .report-meta-row__item--right {
+      align-items: flex-end;
+    }
+  }
+
+  .report-hero-clip {
+    overflow-x: hidden;
+    padding-block: var(--space-6) var(--space-2);
+  }
+
+  .report-hero-eyebrow {
+    margin: 0 0 var(--space-3);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-accent-deep);
+  }
+
+  .report-hero-type__name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(3.5rem, 3rem + 6vw, 9.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  /* Part 2 headline is a sentence, not a city name, so it wraps and
+     runs smaller. */
+  .report-hero-type__name--title {
+    font-size: clamp(2.25rem, 1.4rem + 4.5vw, 5rem);
+    line-height: 1.05;
+    white-space: normal;
+    max-width: 18ch;
+  }
+
+  @media (max-width: 720px) {
+    .report-hero-clip {
+      padding-block: var(--space-6) var(--space-2);
+    }
+
+    .report-hero-type__name {
+      font-size: clamp(2.75rem, 16vw, 5rem);
+    }
+
+    .report-hero-type__name--title {
+      font-size: clamp(2rem, 9vw, 3rem);
+    }
+  }
+
+  .report-header-dek {
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  .report-header-dek .standfirst {
+    margin: 0;
+  }
+
+  .report-header-byline {
+    margin-top: var(--space-3);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--color-muted);
+  }
+
+  .report-hero {
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-8);
+  }
+
+  .report-hero :global(img) {
+    width: 100%;
+    height: auto;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .report-layout {
+    padding-bottom: var(--space-9);
+  }
+
+  .report-prose {
+    margin-inline: auto;
+    margin-top: var(--space-8);
+    counter-reset: section;
+  }
+
+  .report-prose > :global(h2) {
+    counter-increment: section;
+    font-size: 1.6rem;
+    margin-top: var(--space-9);
+    margin-bottom: var(--space-5);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+    position: relative;
+  }
+
+  /* Only a heading that opens the prose loses its rule. A report that
+     starts with scene-setting paragraphs keeps the rule on every h2. */
+  .report-prose > :global(h2:first-child) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .report-prose > :global(h2::before) {
+    content: '0' counter(section) ' · ';
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent-deep);
+    font-weight: 500;
+    margin-right: var(--space-2);
+  }
+
+  /* Part 2 headings are already labeled "Step 1", "Step 2" and so on. */
+  .report-prose--numbers > :global(h2::before) {
+    content: none;
+  }
+
+  .report-prose > :global(p) {
+    color: var(--color-text-soft);
+    margin-bottom: var(--space-5);
+    font-size: 1.02rem;
+  }
+
+  .report-prose > :global(h2:first-child + p) {
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--color-text);
+  }
+
+  .report-prose :global(ul),
+  .report-prose :global(ol) {
+    margin-bottom: var(--space-5);
+    padding-left: 1.4em;
+  }
+
+  .report-prose :global(ul) {
+    list-style: disc;
+  }
+
+  .report-prose :global(ol) {
+    list-style: decimal;
+  }
+
+  .report-prose :global(li) {
+    color: var(--color-text-soft);
+    margin-bottom: var(--space-2);
+  }
+
+  .report-prose :global(:is(p, li) a) {
+    color: var(--color-text);
+    text-decoration-color: var(--color-border);
+    text-underline-offset: 2px;
+  }
+
+  .report-prose :global(:is(p, li) a:hover) {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
+
+  .report-prose :global(strong) {
+    color: var(--color-text);
+  }
+
+  .report-prose :global(em) {
+    font-family: var(--font-display);
+    font-style: italic;
+  }
+
+  .report-prose > :global(h3) {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    margin-top: var(--space-7);
+    margin-bottom: var(--space-4);
+    color: var(--color-text);
+  }
+
+  .report-prose > :global(h4) {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+    color: var(--color-muted);
+  }
+
+  /* GFM tables get no styling from remark by default. Same look as the
+     scorecard: bordered, paper header, mono labels. Scroll horizontally
+     rather than letting cells wrap on narrow viewports. */
+  .report-prose :global(table) {
+    display: table;
+    width: 100%;
+    margin-bottom: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    background: var(--pure-paper);
+    font-size: 0.88rem;
+  }
+
+  @media (max-width: 640px) {
+    .report-prose :global(table) {
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  .report-prose :global(thead) {
+    background: var(--paper);
+  }
+
+  .report-prose :global(th) {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+
+  .report-prose :global(td) {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border-soft);
+    color: var(--color-text-soft);
+    vertical-align: top;
+    min-width: 6em;
+  }
+
+  .report-prose :global(tr:last-child td) {
+    border-bottom: none;
+  }
+
+  /* Worked equations. A blockquote in a report is a calculation callout,
+     not a pull quote: mono, tinted box, no italics. */
+  .report-prose :global(blockquote) {
+    margin: 0 0 var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    background: rgba(58, 107, 126, 0.06);
+    border: 1px solid var(--color-border-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 3px;
+    overflow-x: auto;
+  }
+
+  .report-prose :global(blockquote p) {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .report-prose :global(blockquote strong) {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* Part 2: a paragraph that opens with bold text ("**Land.**") reads as
+     a run-in head. */
+  .report-prose--numbers :global(p > strong.run-in) {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    margin-right: 0.15em;
+  }
+
+  /* Status chips used inline in prose need room before the text that
+     follows them. */
+  .report-prose :global(li > .spf-chip) {
+    margin-right: var(--space-2);
+    vertical-align: 0.08em;
+  }
+
+  .report-prose :global(.spf) {
+    margin-block: var(--space-6);
+  }
+
+  /* Closing call to action: a rule, then one final paragraph. In a
+     two-part report this is the link to Part 2. */
+  .report-prose :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    margin: var(--space-8) 0 var(--space-6);
+  }
+
+  .report-prose :global(hr:last-of-type + p:last-child) {
+    margin-bottom: 0;
+    padding: var(--space-5) var(--space-6);
+    background: var(--pure-paper);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+  }
+
+  .report-prose :global(hr:last-of-type + p:last-child em) {
+    display: block;
+    font-family: var(--font-display);
+    font-style: normal;
+    font-size: 1.2rem;
+    line-height: 1.35;
+    color: var(--ink);
+  }
+
+  .report-prose :global(hr:last-of-type + p:last-child a) {
+    display: block;
+    width: fit-content;
+    margin-top: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    color: var(--color-accent-deep);
+    text-decoration: none;
+  }
+
+  .report-prose :global(hr:last-of-type + p:last-child a:hover) {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

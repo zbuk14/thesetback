@@ -40,7 +40,27 @@ const reports = defineCollection({
       // sourced scorecard instead of the generic placeholder-preset
       // versions.
       proFormaData: z.string().optional(),
+      // Every report is Part 1 of a two-part set. `companion` is the path
+      // to Part 2 ("The numbers"); leave it unset until a numbers file
+      // exists in src/content/numbers/. See docs/report-template.md.
+      part: z.literal(1).default(1),
+      companion: z.string().optional(),
     }),
 });
 
-export const collections = { reports };
+// Part 2 of a report: the step-by-step finance walkthrough. It carries no
+// city, constraint, status, vintage, date or author of its own. Those are
+// read from the parent report (`report` = that report's slug) so there is
+// exactly one place to edit them.
+const numbers = defineCollection({
+  type: 'content',
+  schema: z.object({
+    report: z.string(),
+    title: z.string(),
+    dek: z.string(),
+    part: z.literal(2),
+    companion: z.string().optional(),
+  }),
+});
+
+export const collections = { reports, numbers };

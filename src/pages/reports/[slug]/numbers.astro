@@ -1,0 +1,92 @@
+---
+import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import ReportLayout from '../../../layouts/ReportLayout.astro';
+
+// Part 2 only exists for reports that have a file in src/content/numbers/.
+// Reports without one get no /numbers/ route and nothing else changes.
+export async function getStaticPaths() {
+  const numbers = await getCollection('numbers');
+  return Promise.all(
+    numbers.map(async (entry) => {
+      const report = await getEntry('reports', entry.data.report);
+      if (!report) {
+        throw new Error(
+          `src/content/numbers/${entry.id}: no report with slug "${entry.data.report}" in src/content/reports/`
+        );
+      }
+      return {
+        params: { slug: entry.data.report },
+        props: { entry, report },
+      };
+    })
+  );
+}
+
+interface Props {
+  entry: CollectionEntry<'numbers'>;
+  report: CollectionEntry<'reports'>;
+}
+
+const { entry, report } = Astro.props;
+const { Content } = await entry.render();
+
+// City, number, constraint, status, vintage, date and byline all come from
+// the parent report. Part 2 carries none of its own.
+const { reportNumber, status, constraintTypes, publishDate, dataVintage, author } = report.data;
+const { title, dek } = entry.data;
+const reportHref = entry.data.companion ?? `/reports/${report.slug}`;
+---
+
+<ReportLayout
+  title={`${reportNumber} · ${title}`}
+  description={dek}
+  reportNumber={reportNumber}
+  status={status}
+  constraintTypes={constraintTypes}
+  dataVintage={dataVintage}
+  publishDate={publishDate}
+  headline={title}
+  dek={dek}
+  author={author}
+  eyebrow={`${reportNumber} · The Numbers`}
+  variant="numbers"
+>
+  <Fragment slot="before-prose">
+    <p class="numbers-back measure mono">
+      <a href={reportHref}>← Back to the report</a>
+    </p>
+  </Fragment>
+
+  <Content />
+
+  <Fragment slot="after-prose">
+    <p class="numbers-back numbers-back--bottom measure mono">
+      <a href={reportHref}>← Back to the report</a>
+    </p>
+  </Fragment>
+</ReportLayout>
+
+<style>
+  .numbers-back {
+    margin-inline: auto;
+    margin-top: var(--space-6);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+  }
+
+  .numbers-back--bottom {
+    margin-top: var(--space-8);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border-soft);
+  }
+
+  .numbers-back a {
+    color: var(--color-accent-deep);
+    text-decoration: none;
+  }
+
+  .numbers-back a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>
