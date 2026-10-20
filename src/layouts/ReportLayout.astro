@@ -264,6 +264,11 @@ const hasHero = Astro.slots.has('hero');
 
   /* Only a heading that opens the prose loses its rule. A report that
      starts with scene-setting paragraphs keeps the rule on every h2. */
+  /* Anchor links (#inputs) land below the sticky masthead. */
+  .report-prose > :global(h2[id]) {
+    scroll-margin-top: 96px;
+  }
+
   .report-prose > :global(h2:first-child) {
     margin-top: 0;
     padding-top: 0;

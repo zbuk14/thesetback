@@ -60,40 +60,31 @@ const numbers = defineCollection({
     dek: z.string(),
     part: z.literal(2),
     companion: z.string().optional(),
+    // Rows for the section 8 inputs table: plain-English label, source
+    // display name and formatting, one per input in the report's manifest.
+    // Values, statuses and URLs come from the manifest. See InputsTable.astro.
+    inputs: z
+      .array(
+        z.object({
+          id: z.string(),
+          label: z.string(),
+          source: z.string().optional(),
+          decimals: z.number().optional(),
+          suffix: z.string().optional(),
+        })
+      )
+      .optional(),
   }),
 });
 
-// The Method page. `general.md` holds the sections that apply to every
-// report. Each report adds one file here (r-01.mdx, r-02.mdx, ...) and the
-// page lists them in `order`. See docs/report-template.md.
+// The Method page: one general explainer, no city data. The per-city
+// links on it are generated from the `numbers` collection.
 const method = defineCollection({
   type: 'content',
-  schema: z.discriminatedUnion('kind', [
-    z.object({
-      kind: z.literal('general'),
-      title: z.string(),
-      standfirst: z.string(),
-    }),
-    z.object({
-      kind: z.literal('report'),
-      // Becomes the anchor: "R-01" -> /method#r-01
-      reportNumber: z.string(),
-      city: z.string(),
-      order: z.number(),
-      // One row per input in the report's manifest; see InputsTable.astro.
-      inputs: z
-        .array(
-          z.object({
-            id: z.string(),
-            label: z.string(),
-            source: z.string().optional(),
-            decimals: z.number().optional(),
-            suffix: z.string().optional(),
-          })
-        )
-        .optional(),
-    }),
-  ]),
+  schema: z.object({
+    title: z.string(),
+    standfirst: z.string(),
+  }),
 });
 
 export const collections = { reports, numbers, method };

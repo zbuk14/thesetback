@@ -83,7 +83,9 @@ Step outline, one `##` heading each:
 5. **Step 4: Why investors walk away.** Return on cost against the return needed.
 6. **Step 5: What each fix is worth.** Faster approvals, the full zoning package, a property tax break. Then the calculator.
 7. **Step 6: Why land price does not matter.** The land price that would hit the hurdle.
-8. **Where the inputs come from.** The chip legend, then a link to `/method#<report-id>`.
+8. **Inputs and sources.** Every numbers page ends with this section. Write the heading as `<h2 id="inputs">8. Inputs and sources</h2>` (the `id` is required, because the Method page and Part 1 link to `/reports/<slug>/numbers#inputs`). Then the chip legend, the inputs table, "Other sources", "What we're checking next", and "Reproduce it" with the model download. Close the page with `How the model works: [Method →](/method)`.
+
+   The inputs table is generated from the report's manifest by `InputsTable.astro`: `<InputsTable manifest="<slug>-proforma" rows={frontmatter.inputs} />`. List one row per manifest input under `inputs:` in the Part 2 frontmatter (label, source name, optional `decimals` or `suffix`). Values, statuses and URLs come from the manifest. The build fails if an input has no row. Copy `src/content/numbers/dc.mdx`.
 
 Components and markup the shell styles for you:
 
@@ -114,6 +116,7 @@ The Part 2 page adds the `R-02 · The Numbers` eyebrow, the "← Back to the rep
 2. Write `src/content/reports/<slug>.mdx` (Part 1).
 3. Write `src/content/numbers/<slug>.mdx` (Part 2).
 4. Add the cover image next to the Part 1 file.
-5. Write `src/content/method/<report-number>.mdx` (for example `r-02.mdx`). Copy `r-01.mdx`: set `reportNumber`, `city`, `order`, and list every input in the manifest under `inputs`. The page picks the file up on its own and the section anchor is the report number in lowercase (`/method#r-02`). The Inputs table is built from the manifest by `InputsTable.astro`, and the build fails if an input has no row.
-6. `npm run build`. Open both pages and `/method#<report-id>` at desktop width and at 375px.
-7. Confirm the calculator on Part 2 shows the same figures the prose quotes.
+5. Put a line before the call-to-action rule in Part 1: `[How this was built →](/reports/<slug>/numbers#inputs)`.
+6. Do not edit the Method page. `/method` is city-free. Its "city by city" cards are generated from `src/content/numbers/`, so the new report appears when its numbers file exists.
+7. `npm run build`. Open both pages and `/reports/<slug>/numbers#inputs` at desktop width and at 375px.
+8. Confirm the calculator on Part 2 shows the same figures the prose quotes.

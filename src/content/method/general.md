@@ -1,7 +1,6 @@
 ---
-kind: general
 title: Method
-standfirst: How the numbers are built, where every input comes from, and what to check next.
+standfirst: How every report's numbers are built.
 ---
 
 Every city report runs on one model. It asks a simple question: if you built a normal apartment building in this city today, would it make money?
@@ -79,3 +78,7 @@ Every model simplifies. Ours are chosen so that each one makes the building look
 - **Sold at today's prices.** We assume buyers keep paying today's cap rate. If prices fall, the result gets worse.
 
 One choice cuts the other way and is worth naming: fees and design costs are calculated on land plus construction. Some models leave land out of that base.
+
+## The method, city by city
+
+Each report applies this method to one city, with every input, source and status flag shown in full.

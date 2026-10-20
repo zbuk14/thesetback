@@ -1,29 +1,38 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PlainH3 from '../components/PlainH3.astro';
 
-// general.md is the shared explainer. Every other file in
-// src/content/method/ is one report's section, shown in `order`.
-const entries = await getCollection('method');
-
-const general = entries.find((e) => e.data.kind === 'general');
-if (!general || general.data.kind !== 'general') {
-  throw new Error('src/content/method/general.md is missing');
-}
+// general.md is the shared, city-free explainer. The cards at the end are
+// generated: one per report that has a numbers page.
+const general = await getEntry('method', 'general');
+if (!general) throw new Error('src/content/method/general.md is missing');
 const { title, standfirst } = general.data;
-const { Content: GeneralContent } = await general.render();
+const { Content } = await general.render();
 
-const reports = await Promise.all(
-  entries
-    .flatMap((e) => (e.data.kind === 'report' ? [{ entry: e, data: e.data }] : []))
-    .sort((a, b) => a.data.order - b.data.order)
-    .map(async ({ entry, data }) => ({
-      data,
-      id: data.reportNumber.toLowerCase(),
-      Content: (await entry.render()).Content,
-    }))
-);
+const constraintLabel: Record<string, string> = {
+  regulatory: 'Regulatory',
+  capital: 'Capital',
+  structural: 'Structural',
+};
+
+const numbers = await getCollection('numbers');
+const cities = (
+  await Promise.all(
+    numbers.map(async (entry) => {
+      const report = await getEntry('reports', entry.data.report);
+      if (!report) return null;
+      const { reportNumber, city, constraintTypes } = report.data;
+      return {
+        reportNumber,
+        city,
+        constraint: constraintTypes.map((c) => constraintLabel[c]).join(' + '),
+        href: `/reports/${report.slug}/numbers#inputs`,
+      };
+    })
+  )
+)
+  .filter((c) => c !== null)
+  .sort((a, b) => a.reportNumber.localeCompare(b.reportNumber));
 ---
 
 <BaseLayout title={title} description={standfirst}>
@@ -38,18 +47,22 @@ const reports = await Promise.all(
 
   <div class="container method-layout">
     <div class="method-prose measure">
-      <GeneralContent />
+      <Content />
 
-      {
-        reports.map(({ data, id, Content }) => (
-          <section class="method-report" aria-labelledby={id}>
-            <h2 id={id}>
-              {data.reportNumber} · {data.city}
-            </h2>
-            <Content components={{ h3: PlainH3 }} />
-          </section>
-        ))
-      }
+      <ul class="method-cities">
+        {
+          cities.map((c) => (
+            <li>
+              <a class="method-city" href={c.href}>
+                <span class="method-city__number mono">{c.reportNumber}</span>
+                <span class="method-city__name">{c.city}</span>
+                <span class="method-city__constraint mono">{c.constraint}</span>
+                <span class="method-city__go mono">Inputs, sources and full model →</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </div>
 </BaseLayout>
@@ -149,5 +162,73 @@ const reports = await Promise.all(
   .method-prose :global(:is(p, li) a:hover) {
     color: var(--accent);
     text-decoration-color: var(--accent);
+  }
+
+  /* City cards. Generated, so a new report appears on its own. */
+  .method-prose :global(ul.method-cities) {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-6) 0 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .method-prose :global(ul.method-cities li) {
+    margin: 0;
+  }
+
+  .method-city {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr auto;
+    grid-template-areas:
+      'number name constraint'
+      '. go go';
+    column-gap: var(--space-5);
+    row-gap: var(--space-2);
+    align-items: baseline;
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--color-border-soft);
+    text-decoration: none;
+    color: var(--color-text);
+  }
+
+  .method-city__number {
+    grid-area: number;
+    font-size: 0.72rem;
+    color: var(--color-accent-deep);
+  }
+
+  .method-city__name {
+    grid-area: name;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+  }
+
+  .method-city__constraint {
+    grid-area: constraint;
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .method-city__go {
+    grid-area: go;
+    font-size: 0.78rem;
+    color: var(--color-accent-deep);
+  }
+
+  .method-city:hover .method-city__go {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 520px) {
+    .method-city {
+      grid-template-columns: 3.5rem 1fr;
+      grid-template-areas:
+        'number name'
+        '. constraint'
+        '. go';
+    }
   }
 </style>
