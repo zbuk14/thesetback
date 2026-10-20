@@ -4,9 +4,11 @@ import StatusTag from './StatusTag.astro';
 
 interface Props {
   entry: CollectionEntry<'reports'>;
+  /** Href of Part 2 ("The numbers"), when the report has one. */
+  numbersHref?: string;
 }
 
-const { entry } = Astro.props;
+const { entry, numbersHref } = Astro.props;
 const { reportNumber, city, dek, status, constraintTypes } = entry.data;
 
 const constraintLabel: Record<string, string> = {
@@ -16,34 +18,47 @@ const constraintLabel: Record<string, string> = {
 };
 ---
 
-<a href={`/reports/${entry.slug}`} class="report-row">
+<!-- The whole row is clickable through a stretched link on the city name;
+     the numbers link sits above it so the two never nest. -->
+<div class="report-row">
   <span class="report-row__number mono">{reportNumber}</span>
   <span class="report-row__main">
-    <span class="report-row__city">{city}</span>
+    <a href={`/reports/${entry.slug}`} class="report-row__city report-row__link">{city}</a>
     <span class="report-row__dek">{dek}</span>
+    {
+      numbersHref && (
+        <a
+          href={numbersHref}
+          class="report-row__numbers mono"
+          aria-label={`The numbers behind ${city}`}
+        >
+          The numbers →
+        </a>
+      )
+    }
   </span>
   <span class="report-row__constraint mono">
     {constraintTypes.map((c: string) => constraintLabel[c]).join(' + ')}
   </span>
   <StatusTag status={status} />
-</a>
+</div>
 
 <style>
   .report-row {
+    position: relative;
     display: grid;
     grid-template-columns: 3.5rem 1fr auto auto;
     align-items: center;
     gap: var(--space-5);
     padding-block: var(--space-5);
     border-bottom: 1px solid var(--color-border-soft);
-    text-decoration: none;
     color: var(--color-text);
     transition: background var(--duration-fast) var(--ease-standard),
       transform var(--duration-fast) var(--ease-standard);
   }
 
   .report-row:hover,
-  .report-row:focus-visible {
+  .report-row:focus-within {
     background: rgba(58, 107, 126, 0.05);
     transform: translateX(2px);
   }
@@ -56,6 +71,7 @@ const constraintLabel: Record<string, string> = {
   .report-row__main {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: var(--space-1);
     min-width: 0;
   }
@@ -63,11 +79,34 @@ const constraintLabel: Record<string, string> = {
   .report-row__city {
     font-family: var(--font-display);
     font-size: 1.2rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .report-row__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
   }
 
   .report-row__dek {
     color: var(--color-muted);
     font-size: 0.88rem;
+  }
+
+  .report-row__numbers {
+    position: relative;
+    z-index: 1;
+    margin-top: var(--space-2);
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    color: var(--color-accent-deep);
+    text-decoration: none;
+  }
+
+  .report-row__numbers:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .report-row__constraint {

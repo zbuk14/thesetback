@@ -4,10 +4,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SetbackDivider from '../components/SetbackDivider.astro';
 import FrameworkCard from '../components/FrameworkCard.astro';
 import ReportRow from '../components/ReportRow.astro';
+import { getNumbersHrefs } from '../lib/reports';
 import ChartPreviewCard from '../components/ChartPreviewCard.astro';
 import MethodBand from '../components/MethodBand.astro';
 import SectionNumeral from '../components/SectionNumeral.astro';
 
+const numbersHrefs = await getNumbersHrefs();
 const reports = (await getCollection('reports')).sort((a, b) =>
   a.data.reportNumber.localeCompare(b.data.reportNumber)
 );
@@ -104,7 +106,7 @@ const frameworks = [
       </div>
 
       <div class="reports-index__list">
-        {reports.map((entry) => <ReportRow entry={entry} />)}
+        {reports.map((entry) => <ReportRow entry={entry} numbersHref={numbersHrefs.get(entry.slug)} />)}
       </div>
     </div>
   </section>

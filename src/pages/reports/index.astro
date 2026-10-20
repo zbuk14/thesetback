@@ -2,7 +2,9 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ReportRow from '../../components/ReportRow.astro';
+import { getNumbersHrefs } from '../../lib/reports';
 
+const numbersHrefs = await getNumbersHrefs();
 const reports = (await getCollection('reports')).sort((a, b) =>
   a.data.reportNumber.localeCompare(b.data.reportNumber)
 );
@@ -23,7 +25,7 @@ const reports = (await getCollection('reports')).sort((a, b) =>
       </p>
 
       <div class="reports-page__list" data-reveal>
-        {reports.map((entry) => <ReportRow entry={entry} />)}
+        {reports.map((entry) => <ReportRow entry={entry} numbersHref={numbersHrefs.get(entry.slug)} />)}
       </div>
     </div>
   </section>
