@@ -1,9 +1,31 @@
 ---
 import dcData from '../data/dc-proforma.json';
 
-const earns = dcData.outputs.return_on_cost; // 0.0372
-const needs = dcData.outputs.required_return; // 0.0650
-const reach = dcData.outputs.regulatory_ceiling_roc; // 0.0437
+// Defaults are the D.C. figures. Another city passes its own, as decimals
+// (0.0318 = 3.18%), and may rename the three labels.
+interface Props {
+  earns?: number;
+  reach?: number;
+  needs?: number;
+  earnsLabel?: string;
+  needsLabel?: string;
+  /** Label for the zoning segment. */
+  reachLabel?: string;
+  /** Append the zoning-package return to reachLabel. */
+  showReachValue?: boolean;
+  caption?: string;
+}
+
+const {
+  earns = dcData.outputs.return_on_cost,
+  reach = dcData.outputs.regulatory_ceiling_roc,
+  needs = dcData.outputs.required_return,
+  earnsLabel = 'Earns',
+  needsLabel = 'Needs',
+  reachLabel = 'Everything zoning reform can do',
+  showReachValue = false,
+  caption = 'Grant every reform at once and the building still does not work.',
+} = Astro.props;
 
 const totalRange = needs - earns;
 const reachFraction = (reach - earns) / totalRange;
@@ -12,12 +34,14 @@ const shortFraction = 1 - reachFraction;
 function pct(v: number) {
   return `${(v * 100).toFixed(1)}%`;
 }
+
+const reachText = showReachValue ? `${reachLabel} ${pct(reach)}` : reachLabel;
 ---
 
 <div class="gap-chart" data-reveal>
   <div class="gap-chart__endpoints">
-    <span class="gap-chart__endpoint">Earns {pct(earns)}</span>
-    <span class="gap-chart__endpoint gap-chart__endpoint--right">Needs {pct(needs)}</span>
+    <span class="gap-chart__endpoint">{earnsLabel} {pct(earns)}</span>
+    <span class="gap-chart__endpoint gap-chart__endpoint--right">{needsLabel} {pct(needs)}</span>
   </div>
 
   <div
@@ -31,14 +55,14 @@ function pct(v: number) {
 
   <div class="gap-chart__labels">
     <span class="gap-chart__label gap-chart__label--reach" style={`flex-basis: ${reachFraction * 100}%`}>
-      Everything zoning reform can do
+      {reachText}
     </span>
     <span class="gap-chart__label gap-chart__label--short" style={`flex-basis: ${shortFraction * 100}%`}>
       Still short
     </span>
   </div>
 
-  <p class="mono gap-chart__caption">Grant every reform at once and the building still does not work.</p>
+  <p class="mono gap-chart__caption">{caption}</p>
 </div>
 
 <style>

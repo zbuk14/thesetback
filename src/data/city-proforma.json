@@ -40,7 +40,7 @@
     },
     "la": {
       "name": "Los Angeles",
-      "constraint": "regulatory",
+      "constraint": "cost",
       "land_cost": { "value": 3200000, "status": "ESTIMATE", "source": "Priority validation item. No clean public comp source for entitled L.A. multifamily land." },
       "hard_cost_psf": { "value": 355, "status": "VERIFIED_RANGE", "source": "Rider Levett Bucknall QCR Q1 2026, Los Angeles residential multifamily $270 to $440 per gross SF. Base at midpoint.", "url": "https://www.rlb.com/wp-content/uploads/sites/4/2026/03/Q1-2026-QCR.pdf", "range": [270, 440] },
       "parking_ratio": { "value": 0.50, "status": "ESTIMATE", "source": "Reduced from historic minimums under AB 2097 near transit; many sites still build to market expectation." },

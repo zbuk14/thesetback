@@ -130,13 +130,20 @@
     { "input": "vacancy_credit_loss",   "low_value": 0.050,   "low_roc": 0.0384, "base_roc": 0.0372, "high_value": 0.090,   "high_roc": 0.0359 }
   ],
   "scorecard": [
-    { "id": "M1", "metric": "Housing units permitted per 1,000 residents", "value": "2.3", "vintage": "2025", "source_url": "https://fred.stlouisfed.org/series/DCBPPRIV" },
-    { "id": "M2", "metric": "Multifamily units permitted", "value": "1,372", "vintage": "2025", "source_url": "https://www.dcpolicycenter.org/publications/breaking-the-scarcity-subsidy-cycle-a-new-housing-vision-for-the-district-of-columbia/" },
-    { "id": "M3", "metric": "Decline in total units permitted since 2022", "value": "-79%", "vintage": "2022-2025", "source_url": "https://fred.stlouisfed.org/series/DCBPPRIV" },
-    { "id": "M4", "metric": "Share of residential land where multifamily is allowed", "value": "26%", "vintage": "2026", "source_url": "https://www.dcpolicycenter.org/publications/breaking-the-scarcity-subsidy-cycle-a-new-housing-vision-for-the-district-of-columbia/" },
-    { "id": "M5", "metric": "Average days added by a zoning appeal", "value": "450", "vintage": "2015-2025", "source_url": "https://www.dcpolicycenter.org/publications/breaking-the-scarcity-subsidy-cycle-a-new-housing-vision-for-the-district-of-columbia/" },
-    { "id": "M6", "metric": "Year-over-year change in average asking rent", "value": "-3.8%", "vintage": "Aug 2026", "source_url": "https://www.rentcafe.com/average-rent-market-trends/us/dc/washington/" },
-    { "id": "M7", "metric": "Multifamily rental units that are true market rate", "value": "21%", "vintage": "2024", "source_url": "https://www.dcpolicycenter.org/publications/breaking-the-scarcity-subsidy-cycle-a-new-housing-vision-for-the-district-of-columbia/" }
+    { "id": "M1", "metric": "Housing units permitted per 1,000 residents", "value": "2.3", "vintage": "2025", "source": "FRED",
+ "source_url": "https://fred.stlouisfed.org/series/DCBPPRIV" },
+    { "id": "M2", "metric": "Multifamily units permitted", "value": "1,372", "vintage": "2025", "source": "DC Policy Center",
+ "source_url": "https://www.dcpolicycenter.org/publications/breaking-the-scarcity-subsidy-cycle-a-new-housing-vision-for-the-district-of-columbia/" },
+    { "id": "M3", "metric": "Decline in total units permitted since 2022", "value": "-79%", "vintage": "2022-2025", "source": "FRED",
+ "source_url": "https://fred.stlouisfed.org/series/DCBPPRIV" },
+    { "id": "M4", "metric": "Share of residential land where multifamily is allowed", "value": "26%", "vintage": "2026", "source": "DC Policy Center",
+ "source_url": "https://www.dcpolicycenter.org/publications/breaking-the-scarcity-subsidy-cycle-a-new-housing-vision-for-the-district-of-columbia/" },
+    { "id": "M5", "metric": "Average days added by a zoning appeal", "value": "450", "vintage": "2015-2025", "source": "DC Policy Center",
+ "source_url": "https://www.dcpolicycenter.org/publications/breaking-the-scarcity-subsidy-cycle-a-new-housing-vision-for-the-district-of-columbia/" },
+    { "id": "M6", "metric": "Year-over-year change in average asking rent", "value": "-3.8%", "vintage": "Aug 2026", "source": "RentCafe",
+ "source_url": "https://www.rentcafe.com/average-rent-market-trends/us/dc/washington/" },
+    { "id": "M7", "metric": "Multifamily rental units that are true market rate", "value": "21%", "vintage": "2024", "source": "DC Policy Center",
+ "source_url": "https://www.dcpolicycenter.org/publications/breaking-the-scarcity-subsidy-cycle-a-new-housing-vision-for-the-district-of-columbia/" }
   ],
   "permit_series": {
     "source": "U.S. Census Bureau Building Permits Survey via FRED, series DCBPPRIV",

@@ -1,6 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 
-const constraintTypes = z.enum(['regulatory', 'capital', 'structural']);
+const constraintTypes = z.enum(['regulatory', 'capital', 'structural', 'cost']);
 
 const reports = defineCollection({
   type: 'content',
@@ -12,7 +12,8 @@ const reports = defineCollection({
       // source or methodology note, but several are still ESTIMATE/
       // ASSUMPTION status pending primary-record validation (see the
       // priority queue in dc-proforma.json) — short of 'published'.
-      status: z.enum(['published', 'draft-sourced', 'in-progress', 'upcoming']),
+      // 'draft' is a finished draft that has not been through sourcing review.
+      status: z.enum(['published', 'draft', 'draft-sourced', 'in-progress', 'upcoming']),
       constraintTypes: z.array(constraintTypes).min(1),
       dek: z.string(),
       author: z.string().optional(),
@@ -20,6 +21,17 @@ const reports = defineCollection({
       dataVintage: z.string().optional(),
       heroImage: image().optional(),
       heroImageAlt: z.string().optional(),
+      heroCaption: z.string().optional(),
+      heroCredit: z
+        .object({
+          author: z.string(),
+          authorUrl: z.string().url(),
+          source: z.string(),
+          sourceUrl: z.string().url(),
+        })
+        .optional(),
+      // CSS object-position for the cropped hero, e.g. "center 62%".
+      heroImagePosition: z.string().optional(),
       // Fixed 5-metric shape used by upcoming stub reports that don't yet
       // have a sourced data file. R-01 (and any report with proFormaData
       // set) renders its scorecard from that JSON's `scorecard` array

@@ -51,7 +51,7 @@ export interface SourcedValue<T> {
   status: SourceStatus;
 }
 
-export type ConstraintType = 'regulatory' | 'capital' | 'structural';
+export type ConstraintType = 'regulatory' | 'capital' | 'structural' | 'cost';
 
 export interface CityInputs {
   landCost: SourcedValue<number>;
@@ -124,7 +124,7 @@ export const CITY_DATA: CityPresetData[] = [
     key: 'la',
     label: 'Los Angeles',
     shortLabel: 'LA',
-    constraintTypes: ['regulatory'],
+    constraintTypes: ['cost'],
     inputs: {
       landCost: pending(4_300_000),
       hardCostPerUnit: pending(280_000),

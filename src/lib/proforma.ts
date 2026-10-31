@@ -264,12 +264,14 @@ export const CONSTRAINT_LABELS: Record<ConstraintType, string> = {
   regulatory: 'Regulatory',
   capital: 'Capital',
   structural: 'Structural',
+  cost: 'Cost-driven',
 };
 
 export const CONSTRAINT_COLOR_VARS: Record<ConstraintType, string> = {
   regulatory: 'var(--constraint-regulatory)',
   capital: 'var(--constraint-capital)',
   structural: 'var(--constraint-structural)',
+  cost: 'var(--constraint-cost)',
 };
 
 export { getCityData };

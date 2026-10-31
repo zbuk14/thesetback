@@ -20,6 +20,7 @@
   --constraint-regulatory: #3a6b7e;
   --constraint-capital: #a8763c;
   --constraint-structural: #8a5a52;
+  --constraint-cost: #66704a;
 
   /* Semantic aliases */
   --color-bg: var(--paper);
@@ -399,6 +400,7 @@ p {
   color: #9a6b2c;
 }
 
+.status-tag--draft,
 .status-tag--draft-sourced {
   color: var(--accent);
 }
@@ -439,4 +441,17 @@ p {
     opacity: 1;
     transform: none;
   }
+}
+
+/* Figure captions. Shared by FigureImage and the report hero. */
+.figure-image__caption {
+  margin-top: var(--space-3);
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.figure-image__credit {
+  color: var(--color-muted);
+  font-size: 0.76rem;
 }

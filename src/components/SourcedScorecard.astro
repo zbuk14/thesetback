@@ -4,6 +4,7 @@ interface ScorecardRow {
   metric: string;
   value: string;
   vintage: string;
+  source?: string;
   source_url: string;
 }
 
@@ -12,76 +13,127 @@ interface Props {
 }
 
 const { scorecard } = Astro.props;
+
+// "2,376 (−9%)" renders as "2,376" with "−9%" beneath. A value with no
+// parenthetical renders as a single line.
+function splitValue(value: string) {
+  const match = value.match(/^(.*?)\s*\((.+)\)$/);
+  return match ? { main: match[1], change: match[2] } : { main: value, change: null };
+}
+
+// Rows without a source name fall back to the link's hostname.
+function sourceName(row: ScorecardRow) {
+  if (row.source) return row.source;
+  try {
+    return new URL(row.source_url).hostname.replace(/^www\./, '');
+  } catch {
+    return row.source_url;
+  }
+}
 ---
 
 <table class="scorecard">
   <caption class="visually-hidden">Supply scorecard: sourced metrics</caption>
   <thead>
     <tr>
-      <th scope="col" class="mono">Metric</th>
-      <th scope="col" class="mono">Value</th>
-      <th scope="col" class="mono">Source</th>
+      <th scope="col">Metric</th>
+      <th scope="col">Value</th>
+      <th scope="col">Vintage</th>
+      <th scope="col">Source</th>
     </tr>
   </thead>
   <tbody>
     {
-      scorecard.map((row) => (
-        <tr>
-          <th scope="row">
-            <span class="mono scorecard__id">{row.id}</span>
-            {row.metric}
-          </th>
-          <td class="mono scorecard__value">{row.value}</td>
-          <td class="scorecard__source">
-            <a class="mono" href={row.source_url} target="_blank" rel="noopener noreferrer">
-              {row.vintage}
-            </a>
-          </td>
-        </tr>
-      ))
+      scorecard.map((row) => {
+        const { main, change } = splitValue(row.value);
+        return (
+          <tr>
+            <th scope="row" class="scorecard__metric">
+              <span class="mono scorecard__id">{row.id}</span>
+              {row.metric}
+            </th>
+            <td class="mono scorecard__value">
+              <span class="scorecard__main">{main}</span>
+              {change && <span class="scorecard__change">{change}</span>}
+            </td>
+            <td class="mono scorecard__vintage">{row.vintage}</td>
+            <td class="scorecard__source">
+              <a href={row.source_url} target="_blank" rel="noopener noreferrer">
+                {sourceName(row)}
+              </a>
+            </td>
+          </tr>
+        );
+      })
     }
   </tbody>
 </table>
 
 <style>
-  .scorecard {
+  /* Selectors are table.scorecard + element so they outrank the report
+     prose's own th/td table rules, which would otherwise make the metric
+     column uppercase mono and put a border on the first cell only. */
+  table.scorecard {
     width: 100%;
     border: 1px solid var(--color-border);
     border-radius: 4px;
     overflow: hidden;
     background: var(--pure-paper);
     border-collapse: collapse;
+    font-size: 0.92rem;
   }
 
-  .scorecard thead th {
+  table.scorecard thead th {
     text-align: left;
-    font-size: 0.68rem;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    white-space: nowrap;
     color: var(--color-muted);
-    padding: var(--space-3) var(--space-5);
+    padding: var(--space-3);
     background: var(--paper);
     border-bottom: 1px solid var(--color-border);
   }
 
-  .scorecard thead th:not(:first-child) {
+  table.scorecard thead th:nth-child(2) {
     text-align: right;
   }
 
-  .scorecard tbody tr {
+  table.scorecard th:first-child,
+  table.scorecard td:first-child {
+    padding-left: var(--space-4);
+  }
+
+  table.scorecard th:last-child,
+  table.scorecard td:last-child {
+    padding-right: var(--space-4);
+  }
+
+  table.scorecard tbody th,
+  table.scorecard tbody td {
+    padding: var(--space-4) var(--space-3);
+    vertical-align: top;
+    min-width: 0;
     border-bottom: 1px solid var(--color-border-soft);
   }
 
-  .scorecard tbody tr:last-child {
+  table.scorecard tbody tr:last-child th,
+  table.scorecard tbody tr:last-child td {
     border-bottom: none;
   }
 
-  .scorecard th[scope='row'] {
+  table.scorecard tbody th.scorecard__metric {
+    width: 42%;
     text-align: left;
-    font-weight: 400;
-    padding: var(--space-4) var(--space-5);
+    font-family: var(--font-body);
     font-size: 0.92rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: normal;
     color: var(--color-text);
+    line-height: 1.4;
   }
 
   .scorecard__id {
@@ -90,21 +142,37 @@ const { scorecard } = Astro.props;
     margin-right: var(--space-3);
   }
 
-  .scorecard__value {
+  table.scorecard td.scorecard__value {
     text-align: right;
-    padding: var(--space-4) var(--space-5);
-    font-size: 0.95rem;
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text);
   }
 
-  .scorecard__source {
-    text-align: right;
-    padding: var(--space-4) var(--space-5);
+  .scorecard__main {
+    display: block;
+    font-size: 0.95rem;
+  }
+
+  .scorecard__change {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.72rem;
+    color: var(--color-muted);
+  }
+
+  table.scorecard td.scorecard__vintage {
     white-space: nowrap;
+    font-size: 0.72rem;
+    color: var(--color-muted);
+  }
+
+  table.scorecard td.scorecard__source {
+    font-size: 0.78rem;
+    line-height: 1.4;
   }
 
   .scorecard__source a {
-    font-size: 0.75rem;
     color: var(--color-muted);
     text-decoration: none;
   }
@@ -113,5 +181,87 @@ const { scorecard } = Astro.props;
     color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 2px;
+  }
+
+  /* Phone: each row becomes a card. Metric, then the value large, then
+     vintage and source on one muted line. */
+  @media (max-width: 560px) {
+    table.scorecard {
+      display: block;
+      overflow: visible;
+    }
+
+    table.scorecard thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+
+    table.scorecard tbody {
+      display: block;
+    }
+
+    table.scorecard tbody tr {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      padding: var(--space-4);
+      border-bottom: 1px solid var(--color-border-soft);
+    }
+
+    table.scorecard tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    table.scorecard tbody th,
+    table.scorecard tbody td,
+    table.scorecard tbody th:first-child,
+    table.scorecard tbody td:last-child {
+      display: block;
+      padding: 0;
+      border-bottom: none;
+    }
+
+    table.scorecard tbody th.scorecard__metric {
+      order: 1;
+      width: 100%;
+    }
+
+    table.scorecard td.scorecard__value {
+      order: 2;
+      width: 100%;
+      margin-top: var(--space-2);
+      text-align: left;
+    }
+
+    .scorecard__main {
+      display: inline;
+      font-size: 1.5rem;
+    }
+
+    .scorecard__change {
+      display: inline;
+      margin: 0 0 0 var(--space-2);
+      font-size: 0.78rem;
+    }
+
+    table.scorecard td.scorecard__vintage {
+      order: 3;
+      margin-top: var(--space-2);
+    }
+
+    table.scorecard td.scorecard__source {
+      order: 4;
+      margin-top: var(--space-2);
+      font-size: 0.72rem;
+    }
+
+    table.scorecard td.scorecard__source::before {
+      content: '\00b7';
+      margin-inline: var(--space-2);
+      color: var(--color-muted);
+    }
   }
 </style>

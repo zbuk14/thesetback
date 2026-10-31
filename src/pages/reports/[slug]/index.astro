@@ -31,6 +31,9 @@ const {
   scorecard,
   heroImage,
   heroImageAlt,
+  heroCaption,
+  heroCredit,
+  heroImagePosition,
   publishDate,
   dataVintage,
   proFormaPreset,
@@ -50,6 +53,10 @@ const sourcedDataFiles = import.meta.glob('../../../data/*.json', { eager: true 
 const sourcedScorecard = proFormaData
   ? sourcedDataFiles[`../../../data/${proFormaData}.json`]?.default.scorecard ?? null
   : null;
+
+// A report that sets neither carries its own scorecard in the body, where
+// the author wants it (R-02), so the shell does not add one above the prose.
+const showTopScorecard = Boolean(sourcedScorecard || scorecard);
 ---
 
 <ReportLayout
@@ -67,7 +74,29 @@ const sourcedScorecard = proFormaData
   <Fragment slot="hero">
     {
       heroImage ? (
-        <Image src={heroImage} alt={heroImageAlt ?? `${city}`} widths={[600, 1200, 1800]} sizes="100vw" />
+        <figure class="report-hero__figure">
+          <Image
+            src={heroImage}
+            alt={heroImageAlt ?? `${city}`}
+            widths={[600, 1200, 1600]}
+            sizes="100vw"
+            loading="eager"
+            style={heroImagePosition ? `object-position: ${heroImagePosition}` : undefined}
+          />
+          {(heroCaption || heroCredit) && (
+            <figcaption class="figure-image__caption">
+              {heroCaption && <span>{heroCaption}</span>}
+              {heroCredit && (
+                <span class="figure-image__credit mono">
+                  {heroCaption ? ' · Photo: ' : 'Photo: '}
+                  <a href={heroCredit.authorUrl}>{heroCredit.author}</a>
+                  {' / '}
+                  <a href={heroCredit.sourceUrl}>{heroCredit.source}</a>
+                </span>
+              )}
+            </figcaption>
+          )}
+        </figure>
       ) : (
         <PlaceholderFigure label={`${city}: photography pending`} slim />
       )
@@ -75,6 +104,7 @@ const sourcedScorecard = proFormaData
   </Fragment>
 
   <Fragment slot="before-prose">
+    {showTopScorecard && (
     <section class="report-scorecard" aria-labelledby="scorecard-heading" data-reveal>
       <p class="eyebrow">Supply Scorecard</p>
       <h2 id="scorecard-heading">How {city} measures up</h2>
@@ -93,8 +123,9 @@ const sourcedScorecard = proFormaData
         </p>
       )}
     </section>
+    )}
 
-    <SetbackDivider />
+    {showTopScorecard && <SetbackDivider />}
   </Fragment>
 
   <Content />

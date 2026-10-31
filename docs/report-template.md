@@ -22,8 +22,8 @@ City, report number, constraint, status, data vintage, published date and byline
 ```yaml
 city: "Los Angeles"
 reportNumber: "R-02"
-status: "published"            # published | draft-sourced | in-progress | upcoming
-constraintTypes: ["regulatory"]
+status: "published"            # published | draft | draft-sourced | in-progress | upcoming
+constraintTypes: ["regulatory"]   # regulatory | capital | structural | cost
 dek: "One-line standfirst."
 author: "Zachary Boukkouri"
 publishDate: 2026-10-01
@@ -60,7 +60,7 @@ Plain prose with `##` section headings (the shell numbers them 01, 02 and so on)
 | `<!-- PermitChart -->` | `<PermitCollapseChart />` |
 | `<!-- GapChart -->` | `<GapChart />` |
 
-The Supply Scorecard renders above the prose automatically. Do not put it in the body. There is no calculator in Part 1.
+The Supply Scorecard renders above the prose automatically when the report has `proFormaData` (or a `scorecard` block). Do not put it in the body in that case. A report that sets neither (R-02) gets no automatic scorecard, and puts `<SourcedScorecard scorecard={[...]} />` in the body where it belongs. There is no calculator in Part 1.
 
 The last two elements of the body are the call to Part 2. A rule, then one italic paragraph with the link inside it. The shell styles that pair as a call-to-action card:
 

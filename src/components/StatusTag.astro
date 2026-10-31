@@ -1,12 +1,13 @@
 ---
 interface Props {
-  status: 'published' | 'draft-sourced' | 'in-progress' | 'upcoming';
+  status: 'published' | 'draft' | 'draft-sourced' | 'in-progress' | 'upcoming';
 }
 
 const { status } = Astro.props;
 
 const labels: Record<Props['status'], string> = {
   published: 'Published',
+  draft: 'Draft',
   'draft-sourced': 'Draft · Sourced',
   'in-progress': 'In Progress',
   upcoming: 'Upcoming',

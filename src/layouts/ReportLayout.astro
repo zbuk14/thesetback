@@ -40,6 +40,7 @@ const constraintLabel: Record<string, string> = {
   regulatory: 'Regulatory',
   capital: 'Capital',
   structural: 'Structural',
+  cost: 'Cost-driven',
 };
 
 // YAML frontmatter dates parse as UTC midnight; format in UTC too, or a
@@ -70,7 +71,9 @@ const hasHero = Astro.slots.has('hero');
               {constraintTypes.map((c) => constraintLabel[c]).join(' + ')}
             </span>
             <span class="mono report-meta-row__sub">
-              Vintage {dataVintage ?? 'pending'} · {status === 'published' ? 'Published' : 'Updated'} {dateFormatted ?? 'pending'}
+              {status === 'draft'
+                ? `Vintage ${dataVintage ?? 'pending'} · Draft`
+                : `Vintage ${dataVintage ?? 'pending'} · ${status === 'published' ? 'Published' : 'Updated'} ${dateFormatted ?? 'pending'}`}
             </span>
           </div>
         </div>
