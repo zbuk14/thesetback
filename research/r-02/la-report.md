@@ -5,7 +5,8 @@ slug: la
 part: 1
 companion: /reports/la/numbers/
 constraint_type: Cost-driven
-status: Draft
+status: Published
+publish_date: 2026-11-01
 vintage: 2025–2026
 author: Zachary Boukkouri
 dek: The city fixed the approval. The building still loses money.
@@ -17,7 +18,7 @@ dek: The city fixed the approval. The building still loses money.
 
 For decades the case against Los Angeles was that it took too long to get a yes. The average apartment project permitted between 2010 and 2022 [waited a year and a half for its approvals](https://therealdeal.com/la/2024/02/27/study-finds-it-takes-nearly-four-years-to-build-apartments-in-la/).
 
-The city has spent three years cutting that down. In 2025 it launched what the mayor calls the largest local rezoning in the country. Builders proposed [nearly 30,000 homes](https://mayor.lacity.gov/news/mayor-bass-announces-nearly-30000-homes-moving-forward-first-year-landmark-housing-program) through it in the first year. Fully affordable projects now get approved [in about 60 days](https://www.credaily.com/briefs/affordable-housing-surge-drives-developer-interest-in-los-angeles/). The city issued permits for [12,724 apartments](https://www.realpage.com/analytics/metro-permits-july-2026/) in the twelve months to July, more than any other city in the country.
+The city has spent three years cutting that down. In 2025 it launched what the mayor calls the largest local rezoning in the country. Builders proposed [nearly 30,000 homes](https://mayor.lacity.gov/news/mayor-bass-announces-nearly-30000-homes-moving-forward-first-year-landmark-housing-program) through it in the first year. Fully affordable projects now get approved [in about 60 days](https://www.credaily.com/briefs/affordable-housing-surge-drives-developer-interest-in-los-angeles/). The city issued permits for [12,724 apartments](https://www.realpage.com/analytics/metro-permits-july-2026/) in the twelve months to July, among the most of any U.S. city.
 
 Construction went the other way. Los Angeles County delivered [9 percent fewer new apartments](https://therealdeal.com/la/2026/09/23/measure-ula-rising-costs-plaguing-los-angeles-developers/) in the first half of 2026 than a year earlier, and 15 percent fewer were under construction. A Kidder Mathews broker described most local developers as "pencils down."
 
@@ -28,10 +29,10 @@ This report argues that approval is no longer the main thing stopping apartments
 | # | Metric | Value | Vintage | Source |
 |---|---|---|---|---|
 | M1 | Apartments permitted, City of Los Angeles | 12,724 | 12 mo. to Jul 2026 | [RealPage / Census BPS](https://www.realpage.com/analytics/metro-permits-july-2026/) |
-| M2 | New apartments delivered, L.A. County | 2,376 (−9%) | H1 2026 | [Kidder Mathews via The Real Deal](https://therealdeal.com/la/2026/09/23/measure-ula-rising-costs-plaguing-los-angeles-developers/) |
-| M3 | Median asking rent, City of Los Angeles | $2,742 (−2%) | Q2 2026 | [Realtor.com via The Real Deal](https://therealdeal.com/la/2026/07/31/los-angeles-rents-fall-to-lowest-point-in-nearly-five-years/) |
+| M2 | New apartments delivered, L.A. County | 2,376 (−9% yr/yr) | H1 2026 | [Kidder Mathews via The Real Deal](https://therealdeal.com/la/2026/09/23/measure-ula-rising-costs-plaguing-los-angeles-developers/) |
+| M3 | Median asking rent, City of Los Angeles | $2,742 (−2% yr/yr) | Q2 2026 | [Realtor.com via The Real Deal](https://therealdeal.com/la/2026/07/31/los-angeles-rents-fall-to-lowest-point-in-nearly-five-years/) |
 | M4 | Average sale price per apartment, L.A. County | $280,591 (−29% since 2022) | 2026 | [Kidder Mathews via The Real Deal](https://therealdeal.com/la/2026/09/23/measure-ula-rising-costs-plaguing-los-angeles-developers/) |
-| M5 | Units approved under ED1 with a building permit | 23% | May 2026 | [Bisnow](https://www.bisnow.com/los-angeles/news/affordable-housing/ed-1-affordable-housing-streamlining-los-angeles-135010) |
+| M5 | Fully affordable units approved under ED1 with a building permit | 23% | May 2026 | [Bisnow](https://www.bisnow.com/los-angeles/news/affordable-housing/ed-1-affordable-housing-streamlining-los-angeles-135010) |
 
 *Permits are units authorized, not units built. M1 and M3 are the city; M2 and M4 are the county.*
 
@@ -51,7 +52,7 @@ About two-thirds of the cost is construction itself: labor and materials. Land, 
 
 California is one of the most expensive places in the country to build. The Terner Center at UC Berkeley told the state Assembly in January that the same apartment building [can cost 2.3 times as much to build in California as in Texas](https://ternercenter.berkeley.edu/blog/testimony-to-the-select-committee-on-housing-construction-innovation/). Construction costs in the state have risen at about double the rate of inflation since 2019.
 
-Labor is the largest driver. More than two-thirds of California contractors name worker shortages as their top concern, and the state lost construction workers last year. Foreign-born workers are more than 40 percent of the state's construction workforce, which makes federal immigration enforcement a construction-cost issue. Tariffs add to materials. Builders also report that permits, inspections and other soft costs have [roughly doubled as a share of their budgets](https://therealdeal.com/la/2026/09/23/measure-ula-rising-costs-plaguing-los-angeles-developers/).
+Labor is a major driver. More than two-thirds of California contractors name worker shortages as their top concern, and the state lost construction workers last year. Foreign-born workers are more than 40 percent of the state's construction workforce, which makes federal immigration enforcement a construction-cost issue. Tariffs add to materials. Builders also report that permits, inspections and other soft costs have [roughly doubled as a share of their budgets](https://therealdeal.com/la/2026/09/23/measure-ula-rising-costs-plaguing-los-angeles-developers/).
 
 ## Rents cannot rise to cover it
 
@@ -79,7 +80,7 @@ In 2022 Los Angeles voters passed Measure ULA, promoted as a "mansion tax." It c
 
 The model building would sell for about $14.5 million, so the tax would be about $795,000. For a builder who plans to sell on completion, the tax costs about half of what every zoning reform combined saves.
 
-Some builders now stay under the threshold. One developer told the Los Angeles Times that people are building "two or three stories on parcels that could hold six or seven stories."
+Some builders now stay under the threshold. One developer [told the Los Angeles Times](https://therealdeal.com/la/2026/09/23/measure-ula-rising-costs-plaguing-los-angeles-developers/) that people are building "two or three stories on parcels that could hold six or seven stories."
 
 How much the tax has cost the city is disputed. RAND researchers estimate it [deterred more than 9,000 homes](https://www.rand.org/pubs/research_reports/RRA4928-1.html) through early 2026. A study [cited by the tax's backers](https://unitedtohousela.com/news/statement-on-ula-program-changes/) found interest rates and construction costs did most of the damage, with the tax affecting a narrower group of projects built to sell. The tax has raised $1.2 billion for affordable housing and tenant aid. In July the City Council declined to send an exemption for new apartments to the ballot and asked instead for a [pilot credit](https://www.bisnow.com/los-angeles/news/construction-development/ballot-measure-to-exempt-new-housing-construction-from-ula-dead-after-council-vote-135271) for projects that include affordable units and pay prevailing wages.
 

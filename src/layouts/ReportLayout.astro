@@ -335,7 +335,15 @@ const hasHero = Astro.slots.has('hero');
     text-decoration-color: var(--accent);
   }
 
+  /* Bold in body prose is the body face at 600, inline, with no margin. A
+     display face or a margin on a bold lead-in puts a gap before the
+     punctuation that follows it. */
   .report-prose :global(strong) {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-body);
+    font-weight: 600;
     color: var(--color-text);
   }
 
@@ -464,12 +472,9 @@ const hasHero = Astro.slots.has('hero');
   }
 
   /* Part 2: a paragraph that opens with bold text ("**Land.**") reads as
-     a run-in head. */
+     a run-in head: same face as other bold, darker. */
   .report-prose--numbers :global(p > strong.run-in) {
-    font-family: var(--font-display);
-    font-weight: 600;
     color: var(--ink);
-    margin-right: 0.15em;
   }
 
   /* Status chips used inline in prose need room before the text that

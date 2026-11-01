@@ -115,7 +115,7 @@ ULA adds 0.35 points to the required return. The full zoning package recovers 0.
 | + Hard cost at $270/SF | 6.25% | +1.28 |
 | + Loan at 6.5% | **6.31%** | +0.06 |
 
-Stacked gains grow as the base shrinks. Order matters for each step's share, not for the end point.
+Levers compound. Once property tax is abated, each dollar cut from cost lifts the return more. The order changes each step's share. The end point stays the same.
 
 Approval speed is the weakest zoning lever. During approval only the land is financed: $3.2 million × 8% × 16 months saved = $341,333, or 1.6% of total cost.
 
@@ -131,7 +131,7 @@ Each holds every other input at base.
 | Hard cost per gross SF | $135 | $355 (−62%) |
 | Total cost | $11,441,672 ($286,042 per unit) | $21,586,406 |
 
-The all-in cost that clears, $286,042 per unit, sits close to the $280,591 L.A. County apartments traded at per unit in 2026. Those are existing buildings across the county. The comparison is rough. The direction is clear.
+The all-in cost that clears, $286,042 per unit, sits close to the $280,591 L.A. County apartments traded at per unit in 2026. Those are existing buildings across the county, so the comparison is rough.
 
 ## 8. Land does not decide this
 
@@ -160,7 +160,7 @@ The script is [`la-model.py`](/models/la-model.py). It reproduces every number o
 | Input | Value | Status | Source |
 |---|---|---|---|
 | Units | 40 | Assumption | Model design, same in every city |
-| Unit mix and sizes | 25% / 55% / 20% | Verified | [RentCafe / Yardi Matrix](https://www.rentcafe.com/average-rent-market-trends/us/dc/washington/) |
+| Unit mix and sizes | 25% / 55% / 20% | Verified | [RentCafe / Yardi Matrix](https://www.rentcafe.com/average-rent-market-trends/us/dc/washington/): D.C. averages, held constant across cities |
 | Efficiency ratio | 80% | Estimate | Held constant across cities |
 | Land | $3,200,000 | Estimate | No clean public comp source for entitled L.A. land. Residual land is negative, so the result does not depend on it |
 | Hard cost | $355/SF | Verified range | [RLB QCR Q1 2026](https://www.rlb.com/wp-content/uploads/sites/4/2026/03/Q1-2026-QCR.pdf): L.A. multifamily $270–$440 |
@@ -170,7 +170,7 @@ The script is [`la-model.py`](/models/la-model.py). It reproduces every number o
 | Approval time | 18 months | Verified | [LABCI study](https://therealdeal.com/la/2024/02/27/study-finds-it-takes-nearly-four-years-to-build-apartments-in-la/): 549 days average, 2010–2022 |
 | Construction time | 28 months | Verified | Same study: 863 days average |
 | Construction loan rate | 8.0% | Verified range | [CLS CRE](https://clscre.com/blog/commercial-construction-loan-requirements-2026.html): 7.0%–8.75% |
-| Market rent | $2,750 | Verified | [RentCafe / Yardi Matrix](https://www.rentcafe.com/average-rent-market-trends/us/ca/los-angeles/century-city/): $2,758, Aug 2026 |
+| Market rent | $2,750 | Verified | [RentCafe / Yardi Matrix](https://www.rentcafe.com/average-rent-market-trends/us/ca/los-angeles/): $2,758, Aug 2026 |
 | Affordable set-aside | 10% at $1,500 | Estimate | Density bonus and CHIP tiers vary; about 60% AMI |
 | Other income | 3% | Estimate | Industry convention |
 | Vacancy and credit loss | 6.0% | Derived | [Yardi Matrix](https://www.yardimatrix.com/multifamily-metro/page/3/) |
@@ -179,5 +179,7 @@ The script is [`la-model.py`](/models/la-model.py). It reproduces every number o
 | Exit cap rate | 4.75% | Verified range | [CBRE H1 2026 via CRE Daily](https://www.credaily.com/briefs/cbre-h1-2026-cap-rate-survey-finds-sentiment-split/): Class A 4.5%–5.5% |
 | Developer spread | 1.25 points | Estimate | Typical 1.25–1.75 |
 | ULA thresholds and rates | $5.4M / 4%; $10.9M / 5.5% | Verified | [The Real Deal](https://therealdeal.com/la/2026/09/23/measure-ula-rising-costs-plaguing-los-angeles-developers/), sales after June 30, 2026 |
+
+The article cites Realtor.com's Q2 median asking rent of $2,742. The model uses the RentCafe average. Both sit near $2,750.
 
 **Not modeled.** Ordinary transfer taxes, 0.56% combined in Los Angeles, are left out in every city for consistency. ULA appears only as the required-return adjustment in section 5. The calculator's L.A. preset shows the 6.00% base.
